@@ -1,6 +1,5 @@
-const res = require("express/lib/response");
-
 const clienteController = {};
+
 
 clienteController.list = (req, res) => {
 
@@ -22,14 +21,12 @@ clienteController.save = (req, res) => {
     const data = req.body;
     
     req.getConnection((err, conn) => {
-        console.log("chegou aqui");
         conn.query('INSERT INTO clientes set ?', [data], (err, cliente) => {
-            console.log("chegou aqui");
             if (err) {
                 res.json(err);
             }
 
-            res.redirect('/');
+            res.redirect('/clientes');
         });
     });
 };
@@ -43,7 +40,7 @@ clienteController.delete = (req, res) => {
                 res.json(err);
             }
 
-            res.redirect('/');
+            res.redirect('/clientes');
         });
     });
 };
@@ -74,9 +71,10 @@ clienteController.update = (req, res) => {
                 res.json(err);
             }
             
-            res.redirect('/');
+            res.redirect('/clientes');
         });
     });
 };
 
-module.exports = clienteController;
+
+export default clienteController;

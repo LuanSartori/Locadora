@@ -1,38 +1,32 @@
-const express = require("express");
-const morgan = require("morgan");
-const mysql = require("mysql");
-const myConnection = require("express-myconnection");
-const path = require('path');
+import 'dotenv/config'
+import path from 'path';
+import morgan from 'morgan';
+import express from 'express';
 const app = express();
-require('dotenv').config();
 
-// To get the database password from the .env file
-const PASS = process.env.DATABASE_PASSWORD;
 
-// settings
-app.set('port', process.env.PORT || 3000);
+// Variáveis de ambiente
+const __dirname = import.meta.dirname;
+const PORT = process.env.PORT
+
+// Configurações
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public'))); // Arquivos estáticos
 
 // middlewares
 app.use(morgan('dev'));
-app.use(myConnection(mysql, {
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    port: '3306',
-    database: 'locadora'
-}, 'single'));
 app.use(express.urlencoded({extended: false}));
 
-// Config routes
-const rotas = require('./routers/index.js');
-app.use('/', rotas);
+// Configurando o banco de dados
+import connection from './config/database.js';
+app.use(connection);
 
-// Static files
-app.use(express.static(path.join(__dirname, 'public')));
+// Configurando as rotas
+import rotas from './routers/index.js';
+rotas(app);
 
-// Starting the server
-app.listen(app.get('port'), () => {
-    console.log('Server on port 3000');
+// Iniciando o servidor
+app.listen(PORT || 3000, () => {
+    console.log(`Servidor online na porta ${PORT || 3000}`);
 })

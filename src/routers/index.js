@@ -1,5 +1,5 @@
 import express from 'express';
-import clienteController from '../controllers/clienteController.js';
+import clienteRouter from '../routers/clienteRouter.js';
 
 
 // define uma rota padrão
@@ -13,5 +13,5 @@ router.get("/", function (req, res) {
 // função que indexa todas as pastas de rotas
 export default function(app) {
     app.use("/", router);
-    app.use("/clientes", clienteController);
+    app.use("/clientes", clienteRouter);
 }
