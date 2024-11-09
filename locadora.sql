@@ -88,7 +88,8 @@ BEGIN
 	-- Pega o valor da data, remove os traços e armazena em uma variável
 	SET @dataSenha := REPLACE((SELECT funcAdmissao FROM Funcionarios WHERE funcMatricula = NEW.funcMatricula), '-', '');
 	INSERT INTO Usuarios VALUES (NEW.funcMatricula, @dataSenha, NEW.funcMatricula, NEW.funcDepto, 1);
-END;//
+END; // 
+DELIMITER ;
 
 DELIMITER //
 CREATE TRIGGER after_alocar_veiculo
@@ -99,7 +100,8 @@ BEGIN
     UPDATE veiculos
     SET veicStatusAlocado = 1
     WHERE veicPlaca = NEW.osVeicPlaca;
-END;//
+END; //
+DELIMITER ;
 
 
 INSERT INTO categoria (catNome, catValor_km) VALUES ("Basico", 0.49);

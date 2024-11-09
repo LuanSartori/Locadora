@@ -9,7 +9,7 @@ const connection = myConnection(mysql, {
     password: process.env.DB_PASS || '',
     port:     process.env.DB_PORT || '3306',
     database: process.env.DB_NAME || 'locadora'
-}, 'single')
+}, 'single');
 
 
 export default connection;
