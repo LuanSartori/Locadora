@@ -11,21 +11,18 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "crud-nodejs-mys": "file:",
-    "crud-nodejs-mysql": "file:",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
-    "express-myconnection": "^1.0.4",
     "express-session": "^1.18.1",
-    "locadora": "file:",
     "morgan": "^1.10.0",
-    "mysql": "^2.18.1",
+    "mysql2": "^3.11.4",
     "passport": "^0.7.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.1.7"
   },
   "type": "module"
 }

@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import sequelize from "./config/database.js";
 import path from 'path';
 import morgan from 'morgan';
 import express from 'express';
@@ -37,9 +38,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Configurando o banco de dados
-import connection from './config/database.js';
-app.use(connection);
 
 // Configurando as rotas
 import loginRouter from './routers/loginRouter.js';
@@ -49,7 +47,17 @@ app.use('/login', loginRouter);
 app.use('/clientes', authenticationMiddleware, clienteRouter);
 app.use('/', authenticationMiddleware, indexRouter);
 
-// Iniciando o servidor
-app.listen(PORT || 3000, () => {
-    console.log(`Servidor online na porta ${PORT || 3000}`);
-})
+
+// Sincroniza o banco de dados e inicia o servidor
+const startServer = async () => {
+    try {
+        await sequelize.sync(); // Isso cria as tabelas se elas não existirem
+        app.listen(3000, () => {
+            console.log("Servidor rodando na porta 3000");
+        });
+    } catch (error) {
+        console.error("Erro ao iniciar o servidor:", error);
+    }
+};
+  
+startServer();

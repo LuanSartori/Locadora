@@ -2,24 +2,24 @@ create database locadora;
 use locadora;
 
 create table Clientes(
-	clienteID integer NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	clienteCPF integer(9) NOT NULL UNIQUE,
+	clienteID integer(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	clienteCPF varchar(9) NOT NULL UNIQUE,
 	clienteNome varchar(40) NOT NULL,
 	clienteEnde varchar(60) NOT NULL,
 	clienteTel varchar(15) NOT NULL,
 	clienteCidade varchar(60) NOT NULL,
 	clienteDataNasc date NOT NULL,
-	clienteCNH bigint(11) NOT NULL,
+	clienteCNH varchar(11) NOT NULL,
 	clienteCNHCat varchar(2) NOT NULL
 );
 
 create table Funcionarios(
 	funcMatricula int(4) NOT NULL PRIMARY KEY,
 	funcNome varchar(40) NOT NULL,
-	funcDepto int(1) NOT NULL,
+	funcDepto int(3) NOT NULL,
 	funcSalario decimal(8,2) NOT NULL,
 	funcAdmissao date NOT NULL,
-	funcFilho INT(1) NOT NULL,
+	funcFilho INT(2) NOT NULL,
 	funcSexo varchar(1) NOT NULL,
 	funcAtivo boolean NOT NULL
 );
@@ -35,24 +35,24 @@ create table Veiculos(
 	veicStatusAlocado tinyint(1) NOT NULL
 );
 
-create table Departamento( 
-	deptoCod int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+create table Departamentos( 
+	deptoCod int(3) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 	deptoNome varchar(20) NOT NULL 
 ); 
 
-create table Categoria( 
-	catCod int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+create table Categorias( 
+	catCod int(2) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 	catNome varchar(20) NOT NULL, 
 	catValor_km decimal(8,2) NOT NULL 
 ); 
 
-create table Combustivel( 
+create table Combustiveis( 
 	combTipo char(1) NOT NULL PRIMARY KEY,
 	combNome varchar(20) NULL 
 ); 
 
-create table OrdemDeServico( 
-	osNum int(11) NOT NULL PRIMARY KEY, 
+create table OrdensDeServico( 
+	osNum int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 	osFuncMat int(4) NOT NULL, 
 	osClienteID integer NOT NULL, 
 	osVeicPlaca char(7) NOT NULL, 
@@ -64,19 +64,20 @@ create table OrdemDeServico(
 ); 
 
 create table Usuarios(
-	usuarioLogin int(11) NOT NULL PRIMARY KEY,
+	usuarioId char(36) NOT NULL PRIMARY KEY,
+	usuarioLogin int(11) NOT NULL UNIQUE,
 	usuarioSenha varchar(8) NOT NULL, 
 	usuarioFuncMat int(4) NULL, 
 	usuarioSetor int(11) NOT NULL, 
 	usuarioStatus tinyint (1) NULL 
 );
 
-ALTER TABLE funcionarios ADD FOREIGN KEY (funcDepto) REFERENCES departamento(deptoCod);
-ALTER TABLE Veiculos ADD FOREIGN KEY (veicComb) REFERENCES Combustivel(combTipo);
-ALTER TABLE Veiculos ADD FOREIGN KEY (veicCat) REFERENCES Categoria(catCod);
-ALTER TABLE ordemDeServico ADD FOREIGN KEY (osVeicPlaca) REFERENCES Veiculos(veicPlaca);
-ALTER TABLE ordemDeServico ADD FOREIGN KEY (osClienteID) REFERENCES clientes(clienteID);
-ALTER TABLE ordemDeServico ADD FOREIGN KEY (osFuncMat) REFERENCES funcionarios(funcMatricula);
+ALTER TABLE funcionarios ADD FOREIGN KEY (funcDepto) REFERENCES departamentos(deptoCod);
+ALTER TABLE Veiculos ADD FOREIGN KEY (veicComb) REFERENCES Combustiveis(combTipo);
+ALTER TABLE Veiculos ADD FOREIGN KEY (veicCat) REFERENCES Categorias(catCod);
+ALTER TABLE ordensDeServico ADD FOREIGN KEY (osVeicPlaca) REFERENCES Veiculos(veicPlaca);
+ALTER TABLE ordensDeServico ADD FOREIGN KEY (osClienteID) REFERENCES clientes(clienteID);
+ALTER TABLE ordensDeServico ADD FOREIGN KEY (osFuncMat) REFERENCES funcionarios(funcMatricula);
 ALTER TABLE usuarios ADD FOREIGN KEY (usuarioFuncMat) REFERENCES funcionarios(funcMatricula);
 
 
@@ -87,13 +88,13 @@ FOR EACH ROW
 BEGIN
 	-- Pega o valor da data, remove os traços e armazena em uma variável
 	SET @dataSenha := REPLACE((SELECT funcAdmissao FROM Funcionarios WHERE funcMatricula = NEW.funcMatricula), '-', '');
-	INSERT INTO Usuarios VALUES (NEW.funcMatricula, @dataSenha, NEW.funcMatricula, NEW.funcDepto, 1);
+	INSERT INTO Usuarios VALUES (uuid(), NEW.funcMatricula, @dataSenha, NEW.funcMatricula, NEW.funcDepto, 1);
 END; // 
 DELIMITER ;
 
 DELIMITER //
 CREATE TRIGGER after_alocar_veiculo
-AFTER INSERT ON ordemDeServico
+AFTER INSERT ON ordensDeServico
 FOR EACH ROW
 BEGIN
     -- Atualiza o status do veículo para ocupado (1) quando alocado em uma ordem de serviço
@@ -104,23 +105,23 @@ END; //
 DELIMITER ;
 
 
-INSERT INTO categoria (catNome, catValor_km) VALUES ("Basico", 0.49);
-INSERT INTO categoria (catNome, catValor_km) VALUES ("Utilitario", 0.51); 
-INSERT INTO categoria (catNome, catValor_km) VALUES ("Luxo", 0.53); 
-INSERT INTO categoria (catNome, catValor_km) VALUES ("Especial", 0.55); 
+INSERT INTO categorias (catNome, catValor_km) VALUES ("Basico", 0.49);
+INSERT INTO categorias (catNome, catValor_km) VALUES ("Utilitario", 0.51); 
+INSERT INTO categorias (catNome, catValor_km) VALUES ("Luxo", 0.53); 
+INSERT INTO categorias (catNome, catValor_km) VALUES ("Especial", 0.55); 
  
 
-INSERT INTO departamento (deptoNome) VALUES ("Atendimento"); 
-INSERT INTO departamento (deptoNome) VALUES ("Administrativo"); 
-INSERT INTO departamento (deptoNome) VALUES ("Financeiro"); 
-INSERT INTO departamento (deptoNome) VALUES ("Diretoria"); 
-INSERT INTO departamento (deptoNome) VALUES ("Copa"); 
+INSERT INTO departamentos (deptoNome) VALUES ("Atendimento"); 
+INSERT INTO departamentos (deptoNome) VALUES ("Administrativo"); 
+INSERT INTO departamentos (deptoNome) VALUES ("Financeiro"); 
+INSERT INTO departamentos (deptoNome) VALUES ("Diretoria"); 
+INSERT INTO departamentos (deptoNome) VALUES ("Copa"); 
 
  
-INSERT INTO combustivel (combTipo, combNome) VALUES ('A', "Alcool"); 
-INSERT INTO combustivel (combTipo, combNome) VALUES ('D', "Diesel"); 
-INSERT INTO combustivel (combTipo, combNome) VALUES ('F', "Flex"); 
-INSERT INTO combustivel (combTipo, combNome) VALUES ('G', "Gasolina"); 
+INSERT INTO combustiveis (combTipo, combNome) VALUES ('A', "Alcool"); 
+INSERT INTO combustiveis (combTipo, combNome) VALUES ('D', "Diesel"); 
+INSERT INTO combustiveis (combTipo, combNome) VALUES ('F', "Flex"); 
+INSERT INTO combustiveis (combTipo, combNome) VALUES ('G', "Gasolina"); 
 
  
 INSERT INTO clientes (clienteCPF, clienteNome, clienteEnde, clienteTel, clienteCidade, clienteDataNasc, clienteCNH, clienteCNHCat) VALUES (123456789, "João Silva", "Rua das Flores, 123", "(11) 98765-4321", "São Paulo", "1985-04-12", 12345678900, "B");
@@ -173,14 +174,14 @@ INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicCo
 INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado) VALUES ('AZX3273', 'VW', 'Fox', 'Azul', 2021, 'F', 1, 1);  
 
 
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(1, 1001, 5, 'AWV1234', '2024-09-01', '2024-09-07', 1500, 1, 450.00);
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(2, 1002, 6, 'AWY4546', '2024-09-02', '2024-09-08', 1600, 1, 500.00);
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(3, 1003, 1, 'AVX4003', '2024-09-03', '2024-09-09', 1700, 0, 550.00);
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(4, 1004, 6, 'ASX3232', '2024-09-04', '2024-09-10', 1800, 1, 600.00); 
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(5, 1005, 6, 'AWV1323', '2024-09-05', '2024-09-11', 1900, 1, 650.00); 
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(6, 1006, 1, 'AVX4003', '2024-09-06', '2024-09-12', 2000, 1, 700.00); 
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(7, 1007, 5, 'AZX3273', '2024-09-07', '2024-09-13', 2100, 1, 750.00); 
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(8, 1008, 5, 'AWS2365', '2024-09-08', '2024-09-14', 2200, 0, 800.00); 
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(9, 1009, 6, 'ASX3232', '2024-09-09', '2024-09-15', 2300, 0, 850.00); 
-INSERT INTO ordemdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(10, 1010, 1, 'AWV1234', '2024-09-10', '2024-09-16', 2400, 1, 900.00);
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(1, 1001, 5, 'AWV1234', '2024-09-01', '2024-09-07', 1500, 1, 450.00);
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(2, 1002, 6, 'AWY4546', '2024-09-02', '2024-09-08', 1600, 1, 500.00);
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(3, 1003, 1, 'AVX4003', '2024-09-03', '2024-09-09', 1700, 0, 550.00);
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(4, 1004, 6, 'ASX3232', '2024-09-04', '2024-09-10', 1800, 1, 600.00); 
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(5, 1005, 6, 'AWV1323', '2024-09-05', '2024-09-11', 1900, 1, 650.00); 
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(6, 1006, 1, 'AVX4003', '2024-09-06', '2024-09-12', 2000, 1, 700.00); 
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(7, 1007, 5, 'AZX3273', '2024-09-07', '2024-09-13', 2100, 1, 750.00); 
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(8, 1008, 5, 'AWS2365', '2024-09-08', '2024-09-14', 2200, 0, 800.00); 
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(9, 1009, 6, 'ASX3232', '2024-09-09', '2024-09-15', 2300, 0, 850.00); 
+INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(10, 1010, 1, 'AWV1234', '2024-09-10', '2024-09-16', 2400, 1, 900.00);
 

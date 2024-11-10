@@ -1,15 +1,25 @@
-import mysql from 'mysql';
-import myConnection from 'express-myconnection';
 import 'dotenv/config';
+import { Sequelize } from "sequelize";
 
 
-const connection = myConnection(mysql, {
-    host:     process.env.DB_HOST || 'localhost',
-    user:     process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || '',
-    port:     process.env.DB_PORT || '3306',
-    database: process.env.DB_NAME || 'locadora'
-}, 'single');
+// configura o banco de dados usado
+const sequelize = new Sequelize(
+    'locadora',
+    'root',
+    '',
+    {
+        host: 'localhost',
+        dialect: 'mysql',
+        port: 3306,
+        define: {
+            timestamps: false
+        },
+        logging: false
+    }
+);
+sequelize.authenticate().catch((error) => {
+    console.error('Unable to connect to the database: ', error);
+});
 
 
-export default connection;
+export default sequelize;

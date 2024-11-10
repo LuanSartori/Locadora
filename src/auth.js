@@ -1,47 +1,39 @@
 import bcrypt from 'bcryptjs';
 import {Strategy as LocalStrategy} from 'passport-local';
-import connection from './config/database.js';
+import { Usuarios } from './models/index.js';
 
+
+async function findUser(username) {
+    try {
+        const user = await Usuarios.findOne({ where: { usuarioLogin: username } });
+        return user;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}
 
 export default function (passport) {
 
-    function findUser(username) {
-        connection.connect(
-            (err) => {
-                if (err) throw err;
-                connection.query('SELECT * FROM usuarios WHERE usuarioLogin=?', [username], (err, cliente) => {
-                    console.log('procurou:')
-                    console.log(cliente);
-                    return cliente;
-                })
-            }
-        )
-    }
-
     passport.serializeUser( (user, done) => {
-        done(null, user.usuarioLogin);
+        done(null, user);
     } );
 
-    passport.deserializeUser( (username, done) => {
-        try {
-            const user = findUser(username);
-            done(null, user);
-        } catch (err) {
-            console.log(err);
-            return done(err, null);
-        }
-    });
+    passport.deserializeUser( (user, done) => {
+        done(null, user);
+    } )
 
     passport.use(new LocalStrategy( {
         usernameField: 'usuarioLogin',
         passwordField: 'usuarioSenha'
     },
-    (username, password, done) => {
+    async (username, password, done) => {
         try {
-            const user = findUser(username);
+            const user = await findUser(username);
             if (!user) return done(null, false);
 
             const isValid = (password == user.usuarioSenha);
+            
             if (!isValid) return done(null, false);
             return done(null, user);
 

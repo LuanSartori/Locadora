@@ -1,4 +1,5 @@
 const loginController = {};
+import { Usuarios, OrdensDeServico } from '../models/index.js';
 
 
 loginController.login = (req, res) => {
