@@ -1,5 +1,6 @@
+import jwt from 'jsonwebtoken';
+import { Usuarios } from '../models/index.js';
 const loginController = {};
-import { Usuarios, OrdensDeServico } from '../models/index.js';
 
 
 loginController.login = (req, res) => {
@@ -11,22 +12,29 @@ loginController.login = (req, res) => {
 }
 
 
-loginController.logar = (req, res) => {
+loginController.logar = async (req, res) => {
     const {usuarioLogin, usuarioSenha} = req.body;
 
-    req.getConnection((err, conn) => {
-        conn.query('SELECT * FROM usuarios WHERE usuarioLogin=? AND usuarioSenha=?', [usuarioLogin, usuarioSenha], (err, cliente) => {
-            if (err) {
-                res.json(err);
-            }
+    try {
+        const usuario = await Usuarios.findOne({where: {usuarioLogin: usuarioLogin}});
+        if (!usuario) {
+            res.redirect("/login?fail=true");
+            return;
+        }
 
-            if (cliente) {
-                res.redirect('/')
-            } else {
-                res.redirect('/login?fail=true')
-            }
-        });
-    });
+        if (usuarioSenha == usuario.usuarioSenha) {
+            const payload = {usuarioID: usuario.usuarioID};
+            const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
+            res.cookie("jwt_token", token, { maxAge: 5*60*1000, httpOnly: true }); // 5 minutos
+            res.redirect("/home");
+        } else {
+            res.redirect("/login?fail=true");
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json("Erro interno do sistema.");
+    }
     
 };
 
