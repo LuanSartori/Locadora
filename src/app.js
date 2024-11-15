@@ -2,19 +2,15 @@ import 'dotenv/config'
 import sequelize from "./config/database.js";
 import path from 'path';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 const app = express();
 
+
 // autenticação de usuário
 import passport from 'passport';
-import session from 'express-session';
-import auth from './auth.js';
+import {auth, requer_login} from './config/auth.js';
 auth(passport)
-
-function authenticationMiddleware(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect('/login');
-};
 
 // Variáveis de ambiente
 const __dirname = import.meta.dirname;
@@ -29,30 +25,22 @@ app.use(express.static(path.join(__dirname, 'public'))); // Arquivos estáticos
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(session({
-    secret: 'capybara',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 30 * 60 * 1000 } // 30 minutos
-}))
+app.use(cookieParser());
 app.use(passport.initialize());
-app.use(passport.session());
-
 
 // Configurando as rotas
 import loginRouter from './routers/loginRouter.js';
 import clienteRouter from './routers/clienteRouter.js';
 import indexRouter from './routers/index.js'
 app.use('/login', loginRouter);
-app.use('/clientes', authenticationMiddleware, clienteRouter);
-app.use('/', authenticationMiddleware, indexRouter);
-
+app.use('/clientes', requer_login, clienteRouter);
+app.use('/home', requer_login, indexRouter);
 
 // Sincroniza o banco de dados e inicia o servidor
 const startServer = async () => {
     try {
         await sequelize.sync(); // Isso cria as tabelas se elas não existirem
-        app.listen(3000, () => {
+        app.listen(PORT, () => {
             console.log("Servidor rodando na porta 3000");
         });
     } catch (error) {

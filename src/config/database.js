@@ -14,11 +14,11 @@ const sequelize = new Sequelize(
         define: {
             timestamps: false
         },
-        logging: false
+        logging: console.log
     }
 );
 sequelize.authenticate().catch((error) => {
-    console.error('Unable to connect to the database: ', error);
+    console.error('Não é possível conectar-se ao banco de dados: ', error);
 });
 
 
