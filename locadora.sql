@@ -51,7 +51,7 @@ create table Combustiveis(
 	combNome varchar(20) NULL 
 ); 
 
-create table OrdensDeServico( 
+create table ordensDeServicos( 
 	osNum int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 	osFuncMat int(4) NOT NULL, 
 	osClienteID integer NOT NULL, 
@@ -75,9 +75,9 @@ create table Usuarios(
 ALTER TABLE funcionarios ADD FOREIGN KEY (funcDepto) REFERENCES departamentos(deptoCod);
 ALTER TABLE Veiculos ADD FOREIGN KEY (veicComb) REFERENCES Combustiveis(combTipo);
 ALTER TABLE Veiculos ADD FOREIGN KEY (veicCat) REFERENCES Categorias(catCod);
-ALTER TABLE ordensDeServico ADD FOREIGN KEY (osVeicPlaca) REFERENCES Veiculos(veicPlaca);
-ALTER TABLE ordensDeServico ADD FOREIGN KEY (osClienteID) REFERENCES clientes(clienteID);
-ALTER TABLE ordensDeServico ADD FOREIGN KEY (osFuncMat) REFERENCES funcionarios(funcMatricula);
+ALTER TABLE ordensDeServicos ADD FOREIGN KEY (osVeicPlaca) REFERENCES Veiculos(veicPlaca);
+ALTER TABLE ordensDeServicos ADD FOREIGN KEY (osClienteID) REFERENCES clientes(clienteID);
+ALTER TABLE ordensDeServicos ADD FOREIGN KEY (osFuncMat) REFERENCES funcionarios(funcMatricula);
 ALTER TABLE usuarios ADD FOREIGN KEY (usuarioFuncMat) REFERENCES funcionarios(funcMatricula);
 
 
@@ -94,7 +94,7 @@ DELIMITER ;
 
 DELIMITER //
 CREATE TRIGGER after_alocar_veiculo
-AFTER INSERT ON ordensDeServico
+AFTER INSERT ON ordensDeServicos
 FOR EACH ROW
 BEGIN
     -- Atualiza o status do veículo para ocupado (1) quando alocado em uma ordem de serviço
@@ -174,14 +174,14 @@ INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicCo
 INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado) VALUES ('AZX3273', 'VW', 'Fox', 'Azul', 2021, 'F', 1, 1);  
 
 
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(1, 1001, 5, 'AWV1234', '2024-09-01', '2024-09-07', 1500, 1, 450.00);
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(2, 1002, 6, 'AWY4546', '2024-09-02', '2024-09-08', 1600, 1, 500.00);
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(3, 1003, 1, 'AVX4003', '2024-09-03', '2024-09-09', 1700, 0, 550.00);
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(4, 1004, 6, 'ASX3232', '2024-09-04', '2024-09-10', 1800, 1, 600.00); 
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(5, 1005, 6, 'AWV1323', '2024-09-05', '2024-09-11', 1900, 1, 650.00); 
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(6, 1006, 1, 'AVX4003', '2024-09-06', '2024-09-12', 2000, 1, 700.00); 
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(7, 1007, 5, 'AZX3273', '2024-09-07', '2024-09-13', 2100, 1, 750.00); 
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(8, 1008, 5, 'AWS2365', '2024-09-08', '2024-09-14', 2200, 0, 800.00); 
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(9, 1009, 6, 'ASX3232', '2024-09-09', '2024-09-15', 2300, 0, 850.00); 
-INSERT INTO ordensdeservico (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(10, 1010, 1, 'AWV1234', '2024-09-10', '2024-09-16', 2400, 1, 900.00);
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(1, 1001, 5, 'AWV1234', '2024-09-01', '2024-09-07', 1500, 1, 450.00);
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(2, 1002, 6, 'AWY4546', '2024-09-02', '2024-09-08', 1600, 1, 500.00);
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(3, 1003, 1, 'AVX4003', '2024-09-03', '2024-09-09', 1700, 0, 550.00);
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(4, 1004, 6, 'ASX3232', '2024-09-04', '2024-09-10', 1800, 1, 600.00); 
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(5, 1005, 6, 'AWV1323', '2024-09-05', '2024-09-11', 1900, 1, 650.00); 
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(6, 1006, 1, 'AVX4003', '2024-09-06', '2024-09-12', 2000, 1, 700.00); 
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(7, 1007, 5, 'AZX3273', '2024-09-07', '2024-09-13', 2100, 1, 750.00); 
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(8, 1008, 5, 'AWS2365', '2024-09-08', '2024-09-14', 2200, 0, 800.00); 
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(9, 1009, 6, 'ASX3232', '2024-09-09', '2024-09-15', 2300, 0, 850.00); 
+INSERT INTO ordensDeServicos (osNum, osFuncMat, osClienteID, osVeicPlaca, osDataRetirada, osDataDevolucao, osKMDevolucao, osStatus, osValorPgto) VALUES(10, 1010, 1, 'AWV1234', '2024-09-10', '2024-09-16', 2400, 1, 900.00);
 

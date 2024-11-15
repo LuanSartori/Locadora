@@ -22,11 +22,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public'))); // Arquivos estáticos
 
 // middlewares
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(passport.initialize());
-app.use(morgan('dev'));
 
 // Configurando as rotas
 import loginRouter from './routers/loginRouter.js';
@@ -34,7 +34,7 @@ import clienteRouter from './routers/clienteRouter.js';
 import indexRouter from './routers/index.js'
 app.use('/login', loginRouter);
 app.use('/clientes', requer_login, clienteRouter);
-app.use('/', requer_login, indexRouter);
+app.use('/home', requer_login, indexRouter);
 
 // Sincroniza o banco de dados e inicia o servidor
 const startServer = async () => {
