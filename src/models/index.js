@@ -26,11 +26,29 @@ Funcionarios.belongsTo(Departamentos, { foreignKey: 'funcDepto' }); // Funcionar
 Funcionarios.hasOne(Usuarios, { foreignKey: 'usuarioFuncMat' }); // Usuarios terá um chave apontando para Funcionarios
 Funcionarios.hasMany(OrdensDeServico, { foreignKey: 'osFuncMat' }); // Váris OrdensDeServico apontam para Funcionarios
 
+Funcionarios.addHook('afterCreate', 'tr_add_usuarios', async (func, options) => {
+    const dataSenha = func.funcAdmissao.replaceAll('-', '');
+    await Usuarios.create({
+        usuarioLogin: func.funcMatricula,
+        usuarioSenha: dataSenha,
+        usuarioFuncMat: func.funcMatricula,
+        usuarioSetor: func.funcDepto,
+        usuarioStatus: 1
+    });
+})
+
 
 // ORDENSDESERVICO
 OrdensDeServico.belongsTo(Funcionarios, { foreignKey: 'osFuncMat' }); // OrdensDeServico tem uma chave apontando para Funcionarios
 OrdensDeServico.belongsTo(Clientes, { foreignKey: 'osClienteID' }); // OrdensDeServico tem uma chave apontando para Clientes
 OrdensDeServico.belongsTo(Veiculos, { foreignKey: 'osVeicPlaca' }); // OrdensDeServico tem uma chave apontando para Veiculos
+
+OrdensDeServico.addHook('afterCreate', 'tr_alocar_veiculo', async (os, options) => {
+    const veic = await os.getVeiculo();
+    console.log(veic);
+    veic.veicStatusAlocado = 1;
+    veic.save();
+})
 
 // USUARIOS
 Usuarios.belongsTo(Funcionarios, { foreignKey: 'usuarioFuncMat' }); // Usarios tem uma chave apontando para Funcionarios

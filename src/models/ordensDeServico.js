@@ -8,27 +8,9 @@ const OrdensDeServico = sequelize.define("OrdensDeServico", {
     autoIncrement: true,
     primaryKey: true,
   },
-  // osFuncMat: { 
-  //   type: DataTypes.INTEGER(4),
-  //   references: {
-  //       model: Funcionarios,
-  //       key: funcMatricula
-  //   }
-  //  },
-  // osClienteID: { 
-  //   type: DataTypes.INTEGER(10),
-  //   references: {
-  //       model: Clientes,
-  //       key: clienteID
-  //   }
-  //  },
-  // osVeicPlaca: { 
-  //   type: DataTypes.STRING(7),
-  //   references: {
-  //       model: Veiculos,
-  //       key: veicPlaca
-  //   }
-  //  },
+  osFuncMat: { type: DataTypes.INTEGER(4), allowNull: false },
+  osClienteID: { type: DataTypes.INTEGER(10), allowNull: false },
+  osVeicPlaca: { type: DataTypes.STRING(7), allowNull: false },
   osDataRetirada: { type: DataTypes.DATEONLY, allowNull: false },
   osDataDevolucao: { type: DataTypes.DATEONLY, allowNull: true },
   osKMDevolucao: { type: DataTypes.DECIMAL(8, 2), allowNull: true },

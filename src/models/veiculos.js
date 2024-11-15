@@ -11,20 +11,8 @@ const Veiculos = sequelize.define("Veiculos", {
   veicModelo: { type: DataTypes.STRING(15), allowNull: false },
   veicCor: { type: DataTypes.STRING(15), allowNull: false },
   veicAno: { type: DataTypes.STRING(4), allowNull: false },
-  // veicComb: { 
-  //   type: DataTypes.STRING(1),
-  //   references: {
-  //     model: Combustiveis,
-  //     key: combTipo
-  //   }
-  //  },
-  // veicCat: { 
-  //   type: DataTypes.NUMBER(1),
-  //   references: {
-  //       model: Categorias,
-  //       key: catCod
-  //   }
-  //  },
+  veicComb: { type: DataTypes.STRING(2), allowNull: false },
+  veicCat: { type: DataTypes.INTEGER(2), allowNull: false },
   veicStatusAlocado: { type: DataTypes.BOOLEAN, allowNull: false }
 });
 

@@ -10,13 +10,7 @@ const Usuarios = sequelize.define("Usuarios", {
   },
   usuarioLogin: { type: DataTypes.STRING, allowNull: false },
   usuarioSenha: { type: DataTypes.STRING, allowNull: false },
-  // usuarioFuncMat: {
-  //   type: DataTypes.NUMBER,
-  //   references: {
-  //       model: Funcionarios,
-  //       key: Funcionarios.funcMatricula
-  //   }  
-  // },
+  usuarioFuncMat: { type: DataTypes.INTEGER(4), allowNull: false },
   usuarioSetor: { type: DataTypes.DATEONLY, allowNull: false},
   usuarioStatus: { type: DataTypes.BOOLEAN, allowNull: false }
 });

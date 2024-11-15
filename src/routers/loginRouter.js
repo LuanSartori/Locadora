@@ -1,10 +1,10 @@
-import controller, {verificaLogin} from '../controllers/loginController.js';
+import controller from '../controllers/loginController.js';
 import express from 'express';
 const router = express.Router();
 
 
-router.get('/', verificaLogin, controller.login);
-router.post('/', verificaLogin, controller.logar);
+router.get('/', controller.login);
+router.post('/', controller.logar);
 
 
 export default router;

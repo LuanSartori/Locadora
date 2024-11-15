@@ -9,13 +9,7 @@ const Funcionarios = sequelize.define("Funcionarios", {
     primaryKey: true,
   },
   funcNome: { type: DataTypes.STRING(40), allowNull: false },
-  // funcDepto: { 
-  //   type: DataTypes.INTEGER(3),
-  //   references: {
-  //     model: Departamentos,
-  //     key: Departamentos.deptoCod
-  //   }
-  //  },
+  funcDepto: { type: DataTypes.INTEGER(3), allowNull: false },
   funcSalario: { type: DataTypes.DECIMAL(8, 2), allowNull: false },
   funcAdmissao: { type: DataTypes.DATEONLY, allowNull: false },
   funcFilho: { type: DataTypes.INTEGER(2), allowNull: false },
