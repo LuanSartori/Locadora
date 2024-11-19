@@ -19,6 +19,7 @@ Combustiveis.hasMany(Veiculos, { foreignKey: 'veicComb' }); // Vários Veiculos 
 
 // DEPARTAMENTOS
 Departamentos.hasMany(Funcionarios, { foreignKey: 'funcDepto' }); // Vários Funcionarios podem apontar para um mesmo departamento
+Departamentos.hasMany(Usuarios, { foreignKey: 'usuarioSetor' }); // Vários Usuarios podem apontar para um mesmo departamento
 
 // FUNCIONARIOS
 Funcionarios.belongsTo(Departamentos, { foreignKey: 'funcDepto' }); // Funcionarios terá um chave apontando para Departamentos
@@ -52,6 +53,7 @@ OrdensDeServico.addHook('afterCreate', 'tr_alocar_veiculo', async (os, options) 
 
 // USUARIOS
 Usuarios.belongsTo(Funcionarios, { foreignKey: 'usuarioFuncMat' }); // Usarios tem uma chave apontando para Funcionarios
+Usuarios.belongsTo(Departamentos, { foreignKey: 'usuarioSetor' }); // Usarios tem uma chave apontando para Departamentos
 
 // VEICULOS
 Veiculos.belongsTo(Combustiveis, { foreignKey: 'veicComb' }); // Veiculos terá uma chave apontando para Combustiveis

@@ -48,18 +48,17 @@ export function passportConfig (passport) {
 export const requerLogin = passport.authenticate("jwt", { session: false, failureRedirect: "/login" });
 
 export function verificaLogin (req, res, next) {
-    try {
-        if ("jwt_token" in req.cookies) {    
-            jwt.verify(req.cookies['jwt_token'], process.env.JWT_SECRET_KEY);
-            res.status(403).redirect("/");
+    if ('jwt_token' in req.cookies) {
+        jwt.verify(req.cookies['jwt_token'], process.env.JWT_SECRET_KEY, (err, payload) => {
+            if (err) {
+                console.log(err);
+                if (err instanceof jwt.JsonWebTokenError || err instanceof jwt.TokenExpiredError) res.clearCookie('jwt_token');
+                res.status(401).redirect('/login');
+            }
+
+            res.status(403).redirect('/');
             return;
-        }
-        next();
-    } catch (err) {
-        console.log(err);
-        if (err instanceof jwt.JsonWebTokenError || err instanceof jwt.TokenExpiredError) {
-            res.clearCookie("jwt_token");
-        }
-        res.status(401).redirect("/login");
+        })
     }
+    next();
 }

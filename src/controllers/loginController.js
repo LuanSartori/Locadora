@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Usuarios } from '../models/index.js';
+import { Funcionarios, Usuarios } from '../models/index.js';
 const loginController = {};
 
 
@@ -16,16 +16,19 @@ loginController.logar = async (req, res) => {
     const {usuarioLogin, usuarioSenha} = req.body;
 
     try {
-        const usuario = await Usuarios.findOne({where: {usuarioLogin: usuarioLogin}});
+        const usuario = await Usuarios.findOne({where: {usuarioLogin: usuarioLogin}, include: Funcionarios});
         if (!usuario) {
             res.status(401).redirect("/login?fail=true");
             return;
         }
 
         if (usuarioSenha == usuario.usuarioSenha) {
-            const payload = {usuarioID: usuario.usuarioID};
+            const payload = {
+                usuarioID: usuario.usuarioID,
+                usuarioNome: usuario.Funcionario.funcNome
+            };
             const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
-            res.cookie("jwt_token", token, { maxAge: 5*60*1000, httpOnly: true }); // 5 minutos
+            res.cookie("jwt_token", token, { maxAge: 60*60*1000, httpOnly: true }); // 1 hora
             res.status(200).redirect("/");
         } else {
             res.status(401).redirect("/login?fail=true");

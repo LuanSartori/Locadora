@@ -27,11 +27,17 @@ app.use(passport.initialize());
 passportConfig(passport);
 
 // Configurando as rotas
-import loginRouter from './routers/loginRouter.js';
-import clienteRouter from './routers/clienteRouter.js';
-import indexRouter from './routers/index.js';
+import loginRouter from './routes/loginRouter.js';
+import clientesRouter from './routes/clientesRouter.js';
+import usuariosRouter from './routes/usuariosRouter.js'
+import funcionariosRouter from './routes/funcionariosRouter.js'
+import veiculosRouter from './routes/veiculosRouter.js'
+import indexRouter from './routes/index.js';
 app.use('/login', verificaLogin, loginRouter);
-app.use('/clientes', requerLogin, clienteRouter);
+app.use('/clientes', requerLogin, clientesRouter);
+app.use('/usuarios', requerLogin, usuariosRouter);
+app.use('/funcionarios', requerLogin, funcionariosRouter);
+app.use('/veiculos', requerLogin, veiculosRouter);
 app.use('/', requerLogin, indexRouter);
 
 // Sincroniza o banco de dados e inicia o servidor

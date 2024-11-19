@@ -1,0 +1,82 @@
+<%- include('paginas/_header'); -%>
+
+<h1 class="ml-2">
+  Funcionarios
+</h1>
+<div class="container mx-auto">
+<div class="row mt-5">
+    <div class="col-md-7">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Departamento</th>
+                    <th>Telefone</th>
+                    <th>Data de Admissão</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (funcionarios) { %>
+                    <% for (var i = 0; i < funcionarios.length; i++) { %>
+                        <tr>
+                            <td><%= funcionarios[i].funcMatricula %></td>
+                            <td><%= funcionarios[i].funcNome %></td>
+                            <td><%= funcionarios[i].Departamento.deptoNome %></td>
+                            <td><%= funcionarios[i].funcAdmissao %></td>
+                            <td>
+                                <a href="delete/<%= funcionarios[i].funcMatricula %>" class="btn btn-danger">Excluir</a>
+                                <a href="update/<%= funcionarios[i].funcMatricula %>" class="btn btn-info">Atualizar</a>
+                            </td>
+                        </tr>
+                    <% } %>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-body">
+                <form action="add" method="post">
+                    <div class="form-group">
+                        <input type="text" name="funcNome" placeholder="Nome" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="funcDepto" id="funcDepto">
+                            <option selected> Selecione o departamento</option>
+                            <% for (var i = 0; i < departamentos.length; i++) { %>
+                                <option value="<%= departamentos[i].deptoCodigo %>"><%= departamentos[i].deptoNome %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" min="0" name="funcSalario" placeholder="Salário" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <input type="date" name="funcAdmissao" placeholder="Data de Admissão" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <input type="number" min="0" max="10" name="funcFilho" placeholder="Filhos" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="funcSexo" id="funcSexo">
+                            <option selected>Sexo</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                            <option value="O">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="funcAtivo" value="1">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Salvar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<%- include('paginas/_footer'); -%>

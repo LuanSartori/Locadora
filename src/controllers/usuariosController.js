@@ -1,79 +1,70 @@
+import { Usuarios } from '../models/index.js';
 const usuariosController = {};
 
 
-usuariosController.list = (req, res) => {
-
-    req.getConnection((err, conn) => {
-        conn.query('SELECT * FROM usuarios', (err, usuarios) => {
-            if (err) {
-                res.json(err);
-            }
-
-            res.render('usuarios', {
-                data: usuarios
-            });
-        });
-    });
-
+usuariosController.listar = async (req, res) => {
+    try {
+        const usuarios = await Usuarios.findAll();
+        res.status(200).render('usuarios', {
+            data: usuarios
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).redirect('/');
+    }
 };
 
-usuariosController.save = (req, res) => {
+usuariosController.cadastrar = async (req, res) => {
     const data = req.body;
     
-    req.getConnection((err, conn) => {
-        conn.query('INSERT INTO usuarios set ?', [data], (err, usuarios) => {
-            if (err) {
-                res.json(err);
-            }
-
-            res.redirect('/usuarios');
-        });
-    });
+    try {
+        await Usuarios.create(data);
+        res.status(201).redirect('/usuarios');
+    } catch (err) {
+        console.log(err);
+        res.status(500).redirect('/');
+    }
 };
 
-usuariosController.delete = (req, res) => {
+usuariosController.deletar = async (req, res) => {
     const { id } = req.params;
 
-    req.getConnection((err, conn) => {
-        conn.query('DELETE FROM usuarios WHERE usuariosID = ?', [id], (err, rows) => {
-            if (err) {
-                res.json(err);
-            }
-
-            res.redirect('/usuarios');
-        });
-    });
+    try {
+        await Usuarios.destroy({where: {usuarioID: id}});
+        res.status(201).redirect('/usuarios');
+    } catch (err) {
+        console.log(err);
+        res.status(500).redirect('/');
+    }
 };
 
-usuariosController.edit = (req, res) => {
+usuariosController.editar = async (req, res) => {
     const { id } = req.params;
 
-    req.getConnection((err, conn) => {
-        conn.query('SELECT * FROM usuarios WHERE usuariosID = ?', [id], (err, usuarios) => {
-            if (err) {
-                res.json(err);
-            }
-            
-            res.render('usuarios_edit', {
-                data: usuarios[0]
-            });
-        });
-    });
+    try {
+        const usuario = await Usuarios.findOne({where: {usuarioID: id}});
+        res.status(200).render('usuarios_edit', {
+            data: usuario
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).redirect('/');
+    }
 };
 
-usuariosController.update = (req, res) => {
+usuariosController.atualizar = async (req, res) => {
     const { id } = req.params;
-    const newCustomer = req.body;
+    const data = req.body;
     
-    req.getConnection((err, conn) => {
-        conn.query('UPDATE usuarios set ? WHERE usuariosID = ?', [newCustomer, id], (err, rows) => {
-            if (err) {
-                res.json(err);
-            }
-            
-            res.redirect('/usuarios');
-        });
-    });
+    try {
+        var usuario = await Usuarios.findOne({where: {usuarioID: id}});
+        usuario.set(data);
+        usuario.save();
+        res.status(201).redirect('/usuarios');
+    } catch (err) {
+        console.log(err);
+        res.status(500).redirect('/');
+    }
 };
 
 
