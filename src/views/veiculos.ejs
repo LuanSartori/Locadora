@@ -25,8 +25,8 @@
                             <td><%= veiculos[i].veicModelo %></td>
                             <td><% if (veiculos[i].veicStatusAlocado) { %> Ocupado <% } else { %> Desocupado <% } %></td>
                             <td>
-                                <a href="delete/<%= veiculos[i].veicMatricula %>" class="btn btn-danger">Excluir</a>
-                                <a href="update/<%= veiculos[i].veicMatricula %>" class="btn btn-info">Atualizar</a>
+                                <a href="/veiculos/delete/<%= veiculos[i].veicMatricula %>" class="btn btn-danger">Excluir</a>
+                                <a href="/veiculos/update/<%= veiculos[i].veicMatricula %>" class="btn btn-info">Atualizar</a>
                             </td>
                         </tr>
                     <% } %>
@@ -37,7 +37,7 @@
     <div class="col-md-5">
         <div class="card">
             <div class="card-body">
-                <form action="add" method="post">
+                <form action="/veiculos/add" method="post">
                     <div class="form-group">
                         <input type="text" name="veicPlaca" placeholder="Placa [xxxxxxx]" class="form-control" >
                     </div>

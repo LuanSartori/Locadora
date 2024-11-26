@@ -2,7 +2,7 @@ import 'dotenv/config';
 import passport from 'passport';
 import { Strategy as JwtStrategy } from 'passport-jwt';
 import jwt from 'jsonwebtoken';
-import { Usuarios } from '../models/index.js';
+import Usuarios from '../models/usuarios.js';
 
 
 const opcoes_strategy = {

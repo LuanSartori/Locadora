@@ -25,8 +25,8 @@
                             <td><%= funcionarios[i].Departamento.deptoNome %></td>
                             <td><%= funcionarios[i].funcAdmissao %></td>
                             <td>
-                                <a href="delete/<%= funcionarios[i].funcMatricula %>" class="btn btn-danger">Excluir</a>
-                                <a href="update/<%= funcionarios[i].funcMatricula %>" class="btn btn-info">Atualizar</a>
+                                <a href="/funcionarios/delete/<%= funcionarios[i].funcMatricula %>" class="btn btn-danger">Excluir</a>
+                                <a href="/funcionarios/update/<%= funcionarios[i].funcMatricula %>" class="btn btn-info">Atualizar</a>
                             </td>
                         </tr>
                     <% } %>
@@ -37,7 +37,7 @@
     <div class="col-md-5">
         <div class="card">
             <div class="card-body">
-                <form action="add" method="post">
+                <form action="/funcionarios/add" method="post">
                     <div class="form-group">
                         <input type="text" name="funcNome" placeholder="Nome" class="form-control" >
                     </div>

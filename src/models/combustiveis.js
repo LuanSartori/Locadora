@@ -1,14 +1,21 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database.js';
 
 
-const Combustiveis = sequelize.define("Combustiveis", {
-  combTipo: {
-    type: DataTypes.STRING(2),
-    primaryKey: true,
+class Combustiveis extends Model {}
+Combustiveis.init(
+  {
+    combTipo: {
+      type: DataTypes.STRING(2),
+      primaryKey: true,
+    },
+    combNome: { type: DataTypes.STRING(20), allowNull: false }
   },
-  combNome: { type: DataTypes.STRING(20), allowNull: false }
-});
+  {
+    sequelize,
+    modelName: "Combustiveis"
+  }
+);
 
 
 export default Combustiveis;

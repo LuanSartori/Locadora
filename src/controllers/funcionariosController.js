@@ -1,4 +1,5 @@
-import { Departamentos, Funcionarios } from '../models/index.js';
+import Departamentos from "../models/departamentos.js";
+import Funcionarios from "../models/funcionarios.js";
 const funcionariosController = {};
 
 

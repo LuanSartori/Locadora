@@ -1,4 +1,5 @@
-import { Categorias, Clientes } from '../models/index.js';
+import Categorias from "../models/categorias.js";
+import Clientes from "../models/clientes.js";
 const clientesController = {};
 
 
