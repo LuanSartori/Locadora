@@ -1,8 +1,10 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database.js';
 
 
-const Clientes = sequelize.define("Clientes", {
+class Clientes extends Model {}
+Clientes.init(
+  {
   clienteID: {
     type: DataTypes.INTEGER(10),
     autoIncrement: true,
@@ -16,7 +18,12 @@ const Clientes = sequelize.define("Clientes", {
   clienteDataNasc: { type: DataTypes.DATEONLY, allowNull: false },
   clienteCNH: { type: DataTypes.STRING(11), allowNull: false },
   clienteCNHCat: { type: DataTypes.STRING(2), allowNull: false },
-});
+  },
+  {
+    sequelize,
+    modelName: "Clientes"
+  }
+);
 
 
 export default Clientes;

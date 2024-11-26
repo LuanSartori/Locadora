@@ -1,4 +1,4 @@
-import { Usuarios } from '../models/index.js';
+import Usuarios from "../models/usuarios.js";
 const usuariosController = {};
 
 

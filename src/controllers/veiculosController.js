@@ -1,4 +1,6 @@
-import { Categorias, Combustiveis, Veiculos } from '../models/index.js';
+import Categorias from "../models/categorias.js";
+import Combustiveis from "../models/combustiveis.js";
+import Veiculos from "../models/veiculos.js";
 const veiculosController = {};
 
 

@@ -25,8 +25,8 @@
                             <td><%= clientes[i].clienteEnde %></td>
                             <td><%= clientes[i].clienteTel %></td>
                             <td>
-                                <a href="delete/<%= clientes[i].clienteID %>" class="btn btn-danger">Excluir</a>
-                                <a href="update/<%= clientes[i].clienteID %>" class="btn btn-info">Atualizar</a>
+                                <a href="/clientes/delete/<%= clientes[i].clienteID %>" class="btn btn-danger">Excluir</a>
+                                <a href="/clientes/update/<%= clientes[i].clienteID %>" class="btn btn-info">Atualizar</a>
                             </td>
                         </tr>
                     <% } %>

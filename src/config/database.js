@@ -4,17 +4,17 @@ import { Sequelize } from "sequelize";
 
 // configura o banco de dados usado
 const sequelize = new Sequelize(
-    'locadora',
-    'root',
-    '',
+    process.env.DB_NAME || 'locadora',
+    process.env.DB_USER || 'root',
+    process.env.DB_PASS || '',
     {
-        host: 'localhost',
-        dialect: 'mysql',
-        port: 3306,
+        host: process.env.DB_HOST || 'localhost',
+        dialect: process.env.DB_DIALECT || 'mysql',
+        port: process.env.DB_PORT || 3306,
         define: {
             timestamps: false
         },
-        logging: false
+        logging: console.log
     }
 );
 sequelize.authenticate().catch((error) => {

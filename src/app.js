@@ -4,21 +4,21 @@ import path from 'path';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import { passportConfig, requerLogin, verificaLogin } from './config/auth.js';
+import { passportConfig } from './config/auth.js';
 import express from 'express';
 const app = express();
 
 
-// Variáveis de ambiente
-const __dirname = import.meta.dirname;
+// VARIÁVEIS DE AMBIENTE
+const __dirname = import.meta.dirname || path.dirname(process.argv[1]);
 const PORT = process.env.PORT;
 
-// Configurações
+// CONFIGURAÇÕES
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public'))); // Arquivos estáticos
 
-// middlewares
+// MIDDLEWAReS
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -26,26 +26,16 @@ app.use(cookieParser());
 app.use(passport.initialize());
 passportConfig(passport);
 
-// Configurando as rotas
-import loginRouter from './routes/loginRouter.js';
-import clientesRouter from './routes/clientesRouter.js';
-import usuariosRouter from './routes/usuariosRouter.js'
-import funcionariosRouter from './routes/funcionariosRouter.js'
-import veiculosRouter from './routes/veiculosRouter.js'
-import indexRouter from './routes/index.js';
-app.use('/login', verificaLogin, loginRouter);
-app.use('/clientes', requerLogin, clientesRouter);
-app.use('/usuarios', requerLogin, usuariosRouter);
-app.use('/funcionarios', requerLogin, funcionariosRouter);
-app.use('/veiculos', requerLogin, veiculosRouter);
-app.use('/', requerLogin, indexRouter);
+// CONFIGURA AS ROTAS
+import rotas from "./routes/index.js"
+rotas(app);
 
 // Sincroniza o banco de dados e inicia o servidor
 const startServer = async () => {
     try {
         await sequelize.sync(); // Isso cria as tabelas se elas não existirem
         app.listen(PORT, () => {
-            console.log("Servidor rodando na porta 3000");
+            console.log(`Servidor rodando na porta ${PORT}`);
         });
     } catch (error) {
         console.error("Erro ao iniciar o servidor:", error);

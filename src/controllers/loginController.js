@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { Funcionarios, Usuarios } from '../models/index.js';
+import Funcionarios from '../models/funcionarios.js';
+import Usuarios from '../models/usuarios.js';
 const loginController = {};
 
 
