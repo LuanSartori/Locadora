@@ -16,6 +16,8 @@ usuariosController.listar = async (req, res) => {
 
 usuariosController.cadastrar = async (req, res) => {
     const data = req.body;
+
+    // TODO: Validações
     
     try {
         await Usuarios.create(data);
@@ -28,6 +30,8 @@ usuariosController.cadastrar = async (req, res) => {
 
 usuariosController.deletar = async (req, res) => {
     const { id } = req.params;
+
+    // Verificar permissão
 
     try {
         await Usuarios.destroy({where: {usuarioID: id}});
@@ -54,12 +58,20 @@ usuariosController.editar = async (req, res) => {
 
 usuariosController.atualizar = async (req, res) => {
     const { id } = req.params;
-    const data = req.body;
-    
+    const { usuarioLogin, usuarioSenha, usuarioFuncMat, usuarioSetor, usuarioStatus } = req.body;
+
+    // TODO: Validações
+
     try {
         var usuario = await Usuarios.findOne({where: {usuarioID: id}});
-        usuario.set(data);
-        usuario.save();
+        usuario.set({
+            usuarioLogin: usuarioLogin || usuario.usuarioLogin,
+            usuarioSenha: usuarioSenha || usuario.usuarioSenha,
+            usuarioFuncMat: usuarioFuncMat || usuario.usuarioFuncMat,
+            usuarioSetor: usuarioSetor || usuario.usuarioSetor,
+            usuarioStatus: usuarioStatus || usuario.usuarioStatus
+        });
+        await usuario.save();
         res.status(201).redirect('/usuarios');
     } catch (err) {
         console.log(err);

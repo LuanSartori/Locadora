@@ -22,6 +22,8 @@ veiculosController.listar = async (req, res) => {
 
 veiculosController.cadastrar = async (req, res) => {
     const data = req.body;
+
+    // TODO: Validações
     
     try {
         await Veiculos.create(data);
@@ -34,6 +36,8 @@ veiculosController.cadastrar = async (req, res) => {
 
 veiculosController.deletar = async (req, res) => {
     const { placa } = req.params;
+
+    // TODO: Verificar permissão
 
     try {
         await Veiculos.destroy({where: {veicPlaca: placa}});
@@ -60,12 +64,20 @@ veiculosController.editar = async (req, res) => {
 
 veiculosController.atualizar = async (req, res) => {
     const { placa } = req.params;
-    const data = req.body;
+    const { veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado } = req.body;
     
     try {
         var veiculo = await Veiculos.findOne({where: {veicPlaca: placa}});
-        veiculo.set(data);
-        veiculo.save();
+        veiculo.set({
+            veicMarca: veicMarca || veiculo.veicMarca,
+            veicModelo: veicModelo || veiculo.veicModelo,
+            veicCor: veicCor || veiculo.veicCor,
+            veicAno: veicAno || veiculo.veicAno,
+            veicComb: veicComb || veiculo.veicComb,
+            veicCat: veicCat || veiculo.veicCat,
+            veicStatusAlocado: veicStatusAlocado || veiculo.veicStatusAlocado
+        });
+        await veiculo.save();
         res.status(201).redirect('/veiculos');
     } catch (err) {
         console.log(err);
