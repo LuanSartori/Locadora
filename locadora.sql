@@ -156,7 +156,7 @@ INSERT INTO funcionarios (funcMatricula, funcNome, funcDepto, funcSalario, funcA
 
 
 
-	INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado) VALUES ('ABW4007', 'VW', 'Jetta', 'Preto', 2022, 'F', 3, 1); 
+INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado) VALUES ('ABW4007', 'VW', 'Jetta', 'Preto', 2022, 'F', 3, 1); 
 INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado) VALUES ('ACZ3243', 'VW', 'Fusca', 'Rosa', 1956, 'G', 4, 1); 
 INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado) VALUES ('ADE3456', 'Chevrolet', 'Camaro', 'Amarelo', 2022, 'G', 4, 1); 
 INSERT INTO veiculos (veicPlaca, veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado) VALUES ('ADW2456', 'VW', 'Gol', 'Vermelho', 2021, 'A', 1, 1); 

@@ -19,18 +19,31 @@ clientesController.listar = async (req, res) => {
 
 clientesController.cadastrar = async (req, res) => {
     const data = req.body;
+
+    // TODO: Validações
     
     try {
-        await Clientes.create(data);
+        await Clientes.create({
+            clienteCPF: data.clienteCPF,
+            clienteNome: data.clienteNome,
+            clienteEnde: data.clienteEnde,
+            clienteTel: data.clienteTel,
+            clienteCidade: data.clienteCidade,
+            clienteDataNasc: data.clienteDataNasc,
+            clienteCNH: data.clienteCNH,
+            clienteCNHCat: data.clienteCNHCat
+        });
         res.status(201).redirect('/clientes');
     } catch (err) {
         console.log(err);
-        res.status(500).redirect('/');
+        res.status(500).redirect('/clientes');
     }
 };
 
 clientesController.deletar = async (req, res) => {
     const { id } = req.params;
+
+    // TODO: Verificar permissão
 
     try {
         await Clientes.destroy({where: {clienteID: id}});
@@ -57,12 +70,24 @@ clientesController.editar = async (req, res) => {
 
 clientesController.atualizar = async (req, res) => {
     const { id } = req.params;
-    const data = req.body;
+    const { clienteCPF, clienteNome, clienteEnde, clienteTel, clienteCidade, clienteDataNasc, clienteCNH, clienteCNHCat } = req.body;
+
+    // TODO: Validações
     
     try {
         var cliente = await Clientes.findOne({where: {clienteID: id}});
-        cliente.set(data)
-        cliente.save();
+        cliente.set({
+            clienteCPF: clienteCPF || cliente.clienteCPF,
+            clienteNome: clienteNome || cliente.clienteNome,
+            clienteEnde: clienteEnde || cliente.clienteEnde,
+            clienteTel: clienteTel || cliente.clienteTel,
+            clienteCidade: clienteCidade || cliente.clienteCidade,
+            clienteDataNasc: clienteDataNasc || cliente.clienteDataNasc,
+            clienteCNH: clienteCNH || cliente.clienteCNH,
+            clienteCNHCat: clienteCNHCat || cliente.clienteCNHCat
+        });
+        await cliente.save();
+
         res.status(201).redirect('/clientes');
     } catch (err) {
         console.log(err);
