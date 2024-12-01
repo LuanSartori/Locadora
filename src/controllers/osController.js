@@ -60,7 +60,7 @@ osController.atualizarOs = async (req, res) => {
             osValorPgto: valor
         });
         await os.save();
-        //res.status(201).redirect();
+        res.status(201);
 
     } catch (err) {
         console.log(err);
