@@ -2,16 +2,15 @@ import OrdensDeServico from "../models/ordensDeServico";
 import Categorias from "../models/categorias";
 import Veiculos from "../models/veiculos";
 
-export function OsValorPgto(kmDev, kmRet, cat) {
-    const {osNum} = req.params;
+export function OsValorPgto(ordem) {
     
     try {
-        var Os = OrdensDeServico.findByPk(osNum);
-        var veic = Veiculos.findOne({where: {veicPlaca: Os.osVeicPlaca}});
+        // var Os = OrdensDeServico.findByPk(osNum);
+        var veic = Veiculos.findOne({where: {veicPlaca: ordem.osVeicPlaca}});
         var Cat = Categorias.findOne({where:{catCod: veic.veicCat}});
 
-        const kmDev = Os.osKMDevolucao;
-        const kmRet = Os.osDataRetirada;
+        const kmDev = ordem.osKMDevolucao;
+        const kmRet = ordem.osDataRetirada;
         const cat = Cat.catValor_km;
     
         const km = kmDev - kmRet;

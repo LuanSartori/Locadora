@@ -21,7 +21,7 @@ OrdensDeServico.init(
     osKMRetirada: { type: DataTypes.DECIMAL(8, 2), allowNull: false },
     osKMDevolucao: { type: DataTypes.DECIMAL(8, 2), allowNull: true },
     osStatus: { type: DataTypes.BOOLEAN, allowNull: false },
-    osValorPgto: { type: DataTypes.DECIMAL(10, 2), allowNull: false }
+    osValorPgto: { type: DataTypes.DECIMAL(10, 2), allowNull: true }
   },
   {
     sequelize,

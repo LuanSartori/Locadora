@@ -3,10 +3,22 @@ import OsValorPgto from "../utils/osValorPgto.js";
 const osController = {};
 
 osController.criarOs = async (req, res) => {
-    const data = req.body;
+    const {osFuncMat, veicPLaca, osClienteID, osDataRetirada, osKMRetirada, osStatus} = req.body;
+    const {id} = req.params;
 
     try{
-        await OrdensDeServico.create(data);
+        await OrdensDeServico.create({
+            osNum: id,
+            osFuncMat: osFuncMat,
+            osClienteID: osClienteID,
+            osVeicPlaca: veicPLaca,
+            osDataRetirada: osDataRetirada,
+            osDataDevolucao: null,
+            osKMRetirada: osKMRetirada,
+            osKMDevolucao: null,
+            osStatus: osStatus,
+            osValorPgto: null
+        });
     } catch (err) {
         console.log(err);
         res.status(500).json("Erro interno do sistema.");
@@ -51,7 +63,7 @@ osController.atualizarOs = async (req, res) => {
 
     try{
         var os = await OrdensDeServico.findOne({where: {osNum: id}});
-        var valor = await OsValorPgto(os.osKMDevolucao, os.osKMRetirada, ).valor;
+        var valor = await OsValorPgto(os);
 
         os.set({
             osStatus: osStatus || os.osStatus,
