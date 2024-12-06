@@ -21,12 +21,27 @@ veiculosController.listar = async (req, res) => {
 };
 
 veiculosController.cadastrar = async (req, res) => {
-    const data = req.body;
+    const { veicPlaca } = req.body;
+    const {veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado} = req.body;
 
-    // TODO: Validações
+    if (!{veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado}) {
+        res.status(400).json({message: 'Campos obrigatórios incompletos, preencha todos.' });
+        return;
+    } else if (await Funcionarios.findByPk(veicPlaca)){
+        res.status(400).json({message: 'Veículo já cadastrado. Tente novamente.' });
+        return;
+    };
     
     try {
-        await Veiculos.create(data);
+        await Veiculos.create({
+            veicMarca: veicMarca,
+            veicModelo: veicModelo,
+            veicCor: veicCor,
+            veicAno: veicAno,
+            veicComb: veicComb,
+            veicCat: veicCat,
+            veicStatusAlocado: veicStatusAlocado
+        });
         res.status(201).redirect('/veiculos');
     } catch (err) {
         console.log(err);
@@ -35,9 +50,12 @@ veiculosController.cadastrar = async (req, res) => {
 };
 
 veiculosController.deletar = async (req, res) => {
-    const { placa } = req.params;
+    const { veicPlaca } = req.params;
 
-    // TODO: Verificar permissão
+    if (!veicPlaca) {
+        res.status(404).json({ 'erro': 'Veículo não encontrado!' });
+        return;
+    };
 
     try {
         await Veiculos.destroy({where: {veicPlaca: placa}});
@@ -63,9 +81,17 @@ veiculosController.editar = async (req, res) => {
 };
 
 veiculosController.atualizar = async (req, res) => {
-    const { placa } = req.params;
+    const { veicPlaca } = req.params;
     const { veicMarca, veicModelo, veicCor, veicAno, veicComb, veicCat, veicStatusAlocado } = req.body;
-    
+
+    if (!veicPlaca) {
+        res.status(404).json({ 'erro': 'Veículo não encontrado!' });
+    };
+    if(veicMarca == veicPlaca.veicMarca && veicModelo == veicPlaca.veicModelo && veicCor == veicPlaca.veicCor && veicAno == veicPlaca.veicAno && veicComb == veicPlaca.veicComb && veicCat == veicPlaca.veicCat && veicStatusAlocado == veicPlaca.veicStatusAlocado){
+        res.status(400).json({message: 'Nenhum campo atualizado. Atualize ao menos um campo para salvar as alterações.' });
+        return;
+    };
+
     try {
         var veiculo = await Veiculos.findOne({where: {veicPlaca: placa}});
         veiculo.set({
