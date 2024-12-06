@@ -18,9 +18,10 @@ OrdensDeServico.init(
     osVeicPlaca: { type: DataTypes.STRING(7), allowNull: false },
     osDataRetirada: { type: DataTypes.DATEONLY, allowNull: false },
     osDataDevolucao: { type: DataTypes.DATEONLY, allowNull: true },
+    osKMRetirada: { type: DataTypes.DECIMAL(8, 2), allowNull: false },
     osKMDevolucao: { type: DataTypes.DECIMAL(8, 2), allowNull: true },
     osStatus: { type: DataTypes.BOOLEAN, allowNull: false },
-    osValorPgto: { type: DataTypes.DECIMAL(10, 2), allowNull: false }
+    osValorPgto: { type: DataTypes.DECIMAL(10, 2), allowNull: true }
   },
   {
     sequelize,
@@ -30,14 +31,14 @@ OrdensDeServico.init(
 
 // Definição das chaves estrangeiras
 
-OrdensDeServico.belongsTo(Funcionarios, { foreignKey: 'osFuncMat' });
-Funcionarios.hasMany(OrdensDeServico, { foreignKey: 'osFuncMat' });
+OrdensDeServico.belongsTo(Funcionarios, { foreignKey: 'osFuncMat', as: 'funcionarios' });
+Funcionarios.hasMany(OrdensDeServico, { foreignKey: 'osFuncMat', as: {singular: 'funcionario', plural: 'funcinarios'} });
 
-OrdensDeServico.belongsTo(Clientes, { foreignKey: 'osClienteID' });
-Clientes.hasMany(OrdensDeServico, { foreignKey: 'osClienteID' });
+OrdensDeServico.belongsTo(Clientes, { foreignKey: 'osClienteID', as: 'clientes' });
+Clientes.hasMany(OrdensDeServico, { foreignKey: 'osClienteID', as: {singular:'cliente', plural: 'clientes'} });
 
-OrdensDeServico.belongsTo(Veiculos, { foreignKey: 'osVeicPlaca' });
-Veiculos.hasMany(OrdensDeServico, { foreignKey: 'osVeicPlaca' });
+OrdensDeServico.belongsTo(Veiculos, { foreignKey: 'osVeicPlaca', as: 'veiculos' });
+Veiculos.hasMany(OrdensDeServico, { foreignKey: 'osVeicPlaca', as: {singular: 'veiculo', plural: 'veiculos'} });
 
 // Definicação dos triggers
 
