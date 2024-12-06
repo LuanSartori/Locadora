@@ -62,15 +62,16 @@ funcionariosController.cadastrar = async (req, res) => {
 };
 
 funcionariosController.deletar = async (req, res) => {
-    const { funcMatricula, id } = req.params;
-
-    if (!funcMatricula) {
-        res.status(404).json({ 'erro': 'Funcionário não encontrado!' });
-        return;
-    };
+    const { id } = req.params;
     
     try {
-        await Funcionarios.destroy({where: {funcMatricula}});
+        const funcionario = await Funcionarios.findByPk(id);
+        if (!funcionario) {
+            res.status(404).json({ 'erro': 'Funcionário não encontrado!' });
+            return;
+        };
+        await funcionario.destroy();
+
         res.status(201).redirect('/funcionarios');
     } catch (err) {
         console.log(err);
@@ -93,19 +94,18 @@ funcionariosController.editar = async (req, res) => {
 };
 
 funcionariosController.atualizar = async (req, res) => {
-    const { funcMatricula, id } = req.params;
+    const { id } = req.params;
     const { funcNome, funcDepto, funcSalario, funcAdmissao, funcFilho, funcSexo, funcAtivo } = req.body;
-
-    if (!funcMatricula) {
-        res.status(404).json({ 'erro': 'Funcionário não encontrado!' });
-    };
-    if(funcNome == funcMatricula.funcNome && funcDepto == funcMatricula.funcDepto && funcSalario == funcMatricula.funcSalario && funcAdmissao == funcMatricula.funcAdmissao && funcFilho == funcMatricula.funcFilho && funcSexo == funcMatricula.funcSexo && funcAtivo == funcMatricula.funcAtivo){
-        res.status(400).json({message: 'Nenhum campo atualizado. Atualize ao menos um campo para salvar as alterações.' });
-        return;
-    };
-
+    
     try {
-        var func = await Funcionarios.findOne({where: {funcMatricula}});
+        var func = await Funcionarios.findByPk(id);
+        if (!func) {
+            res.status(404).json({ 'erro': 'Funcionário não encontrado!' });
+        } else if(funcNome == func.funcNome && funcDepto == func.funcDepto && funcSalario == func.funcSalario && funcAdmissao == func.funcAdmissao && funcFilho == func.funcFilho && funcSexo == func.funcSexo && funcAtivo == func.funcAtivo){
+            res.status(400).json({message: 'Nenhum campo atualizado. Atualize ao menos um campo para salvar as alterações.' });
+            return;
+        };
+
         func.set({
             funcNome: funcNome || func.funcNome,
             funcDepto: funcDepto || func.funcDepto,

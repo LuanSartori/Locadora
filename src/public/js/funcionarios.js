@@ -37,5 +37,5 @@ deletarBtn.addEventListener("click", () => {
         alert("Por favor selecione algum funcionário para deletar.");
         return;
     }
-    window.location.href = "http://localhost:3000/funcionario/delete/" + dados[0];
+    window.location.href = "http://localhost:3000/funcionarios/delete/" + dados[0];
 })
