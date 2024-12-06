@@ -14,23 +14,29 @@ funcionariosController.listar = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).redirect('/');
-    }
+    };
 };
 
 funcionariosController.cadastrar = async (req, res) => {
-    const data = req.body;
+    const {funcMatricula, funcNome, funcDepto, funcSalario, funcAdmissao, funcFilho, funcSexo, funcAtivo} = req.body;
 
-    // TODO: Validações
-    
+    if (!{funcMatricula, funcNome, funcDepto, funcSalario, funcAdmissao, funcFilho, funcSexo, funcAtivo}) {
+        res.status(400).json({message: 'Campos obrigatórios incompletos, preencha todos.' });
+        return;
+    } else if (await Funcionarios.findByPk(funcMatricula)){
+        res.status(400).json({message: 'Essa matrícula já existe. Tente novamente.' });
+        return;
+    };
+
     try {
         await Funcionarios.create({
-            funcNome: data.funcNome,
-            funcDepto: data.funcDepto,
-            funcSalario: data.funcSalario,
-            funcAdmissao: data.funcAdmissao,
-            funcFilho: data.funcFilho,
-            funcSexo: data.funcSexo,
-            funcAtivo: data.funcAtivo
+            funcNome: funcNome,
+            funcDepto: funcDepto,
+            funcSalario: funcSalario,
+            funcAdmissao: funcAdmissao,
+            funcFilho: funcFilho,
+            funcSexo: funcSexo,
+            funcAtivo: funcAtivo
         });
         res.status(201).redirect('/funcionarios');
     } catch (err) {
@@ -40,17 +46,20 @@ funcionariosController.cadastrar = async (req, res) => {
 };
 
 funcionariosController.deletar = async (req, res) => {
-    const { id } = req.params;
+    const { funcMatricula, id } = req.params;
 
-    // TODO: Verificar permissão
-
+    if (!funcMatricula) {
+        res.status(404).json({ 'erro': 'Funcionário não encontrado!' });
+        return;
+    };
+    
     try {
-        await Funcionarios.destroy({where: {funcMatricula: id}});
+        await Funcionarios.destroy({where: {funcMatricula}});
         res.status(201).redirect('/funcionarios');
     } catch (err) {
         console.log(err);
         res.status(500).redirect('/');
-    }
+    };
 };
 
 funcionariosController.editar = async (req, res) => {
@@ -64,17 +73,23 @@ funcionariosController.editar = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).redirect('/');
-    }
+    };
 };
 
 funcionariosController.atualizar = async (req, res) => {
-    const { id } = req.params;
+    const { funcMatricula, id } = req.params;
     const { funcNome, funcDepto, funcSalario, funcAdmissao, funcFilho, funcSexo, funcAtivo } = req.body;
 
-    // TODO: Validações
-    
+    if (!funcMatricula) {
+        res.status(404).json({ 'erro': 'Funcionário não encontrado!' });
+    };
+    if(funcNome == funcMatricula.funcNome && funcDepto == funcMatricula.funcDepto && funcSalario == funcMatricula.funcSalario && funcAdmissao == funcMatricula.funcAdmissao && funcFilho == funcMatricula.funcFilho && funcSexo == funcMatricula.funcSexo && funcAtivo == funcMatricula.funcAtivo){
+        res.status(400).json({message: 'Nenhum campo atualizado. Atualize ao menos um campo para salvar as alterações.' });
+        return;
+    };
+
     try {
-        var func = await Funcionarios.findOne({where: {funcMatricula: id}});
+        var func = await Funcionarios.findOne({where: {funcMatricula}});
         func.set({
             funcNome: funcNome || func.funcNome,
             funcDepto: funcDepto || func.funcDepto,
@@ -89,7 +104,7 @@ funcionariosController.atualizar = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).redirect('/');
-    }
+    };
 };
 
 

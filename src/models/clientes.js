@@ -25,5 +25,4 @@ Clientes.init(
   }
 );
 
-
 export default Clientes;

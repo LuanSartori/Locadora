@@ -18,20 +18,26 @@ clientesController.listar = async (req, res) => {
 };
 
 clientesController.cadastrar = async (req, res) => {
-    const data = req.body;
+    const {clienteCPF, clienteNome, clienteEnde, clienteTel, clienteCidade, clienteDataNasc, clienteCNH, clienteCNHCat} = req.body;
 
-    // TODO: Validações
+    if (!{clienteCPF, clienteNome, clienteEnde, clienteTel, clienteCidade, clienteDataNasc, clienteCNH, clienteCNHCat}) {
+        res.status(400).json({message: 'Campos obrigatórios incompletos, preencha todos.' });
+        return;
+    } else if (await Clientes.findByPk(clienteID)){
+        res.status(400).json({message: 'Cliente já cadastrado. Tente novamente.' });
+        return;
+    };
     
     try {
         await Clientes.create({
-            clienteCPF: data.clienteCPF,
-            clienteNome: data.clienteNome,
-            clienteEnde: data.clienteEnde,
-            clienteTel: data.clienteTel,
-            clienteCidade: data.clienteCidade,
-            clienteDataNasc: data.clienteDataNasc,
-            clienteCNH: data.clienteCNH,
-            clienteCNHCat: data.clienteCNHCat
+            clienteCPF: clienteCPF,
+            clienteNome: clienteNome,
+            clienteEnde: clienteEnde,
+            clienteTel: clienteTel,
+            clienteCidade: clienteCidade,
+            clienteDataNasc: clienteDataNasc,
+            clienteCNH: clienteCNH,
+            clienteCNHCat: clienteCNHCat
         });
         res.status(201).redirect('/clientes');
     } catch (err) {
@@ -43,7 +49,10 @@ clientesController.cadastrar = async (req, res) => {
 clientesController.deletar = async (req, res) => {
     const { id } = req.params;
 
-    // TODO: Verificar permissão
+    if (!{clienteCPF, clienteID}) {
+        res.status(404).json({ 'erro': 'Cliente não encontrado!' });
+        return;
+    };
 
     try {
         await Clientes.destroy({where: {clienteID: id}});
@@ -69,13 +78,23 @@ clientesController.editar = async (req, res) => {
 };
 
 clientesController.atualizar = async (req, res) => {
-    const { id } = req.params;
+    const { clienteID, id } = req.params;
     const { clienteCPF, clienteNome, clienteEnde, clienteTel, clienteCidade, clienteDataNasc, clienteCNH, clienteCNHCat } = req.body;
 
-    // TODO: Validações
-    
+    if (!clienteID) {
+        res.status(404).json({ 'erro': 'Cliente não encontrado!' });
+    };
+    if(clienteCPF == clienteID.clienteCPF && clienteNome == clienteID.clienteNome && clienteEnde == clienteID.clienteEnde && clienteTel == clienteID.clienteTel && clienteCidade == clienteID.clienteCidade && clienteDataNasc == clienteID.clienteDataNasc && clienteCNH == clienteID.clienteCNH && clienteCNHCat == clienteID.clienteCNHCat){
+        res.status(400).json({message: 'Nenhum campo atualizado. Atualize ao menos um campo para salvar as alterações.' });
+        return;
+    };
+    if(clienteCPF != clienteID.clienteCPF && await Clientes.findAll({where : {clienteCPF: clienteCPF} })){
+        res.status(400).json({message: 'CPF inválido, tente novamente.' });  
+        return;
+    };
+
     try {
-        var cliente = await Clientes.findOne({where: {clienteID: id}});
+        var cliente = await Clientes.findOne({where: {clienteID}});
         cliente.set({
             clienteCPF: clienteCPF || cliente.clienteCPF,
             clienteNome: clienteNome || cliente.clienteNome,
