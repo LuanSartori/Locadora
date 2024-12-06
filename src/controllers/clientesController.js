@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import Categorias from "../models/categorias.js";
 import Clientes from "../models/clientes.js";
 const clientesController = {};
@@ -7,7 +8,7 @@ clientesController.listar = async (req, res) => {
     try {
         const clientes = await Clientes.findAll();
         const categorias = await Categorias.findAll();
-        res.status(200).render('clientes', {
+        res.status(200).render('clientes_lista', {
             clientes: clientes,
             categorias: categorias
         })
@@ -20,15 +21,15 @@ clientesController.listar = async (req, res) => {
 clientesController.cadastrar = async (req, res) => {
     const {clienteCPF, clienteNome, clienteEnde, clienteTel, clienteCidade, clienteDataNasc, clienteCNH, clienteCNHCat} = req.body;
 
-    if (!{clienteCPF, clienteNome, clienteEnde, clienteTel, clienteCidade, clienteDataNasc, clienteCNH, clienteCNHCat}) {
-        res.status(400).json({message: 'Campos obrigatórios incompletos, preencha todos.' });
-        return;
-    } else if (await Clientes.findByPk(clienteID)){
-        res.status(400).json({message: 'Cliente já cadastrado. Tente novamente.' });
-        return;
-    };
-    
     try {
+        if (!clienteCPF || !clienteNome || !clienteEnde || !clienteTel || !clienteCidade || !clienteDataNasc || !clienteCNH || !clienteCNHCat) {
+            res.status(400).json({message: 'Campos obrigatórios incompletos, preencha todos.' });
+            return;
+        } else if (await Clientes.findOne({where: { "clienteCPF": clienteCPF }})){
+            res.status(400).json({message: 'Cliente já cadastrado. Tente novamente.' });
+            return;
+        };
+
         await Clientes.create({
             clienteCPF: clienteCPF,
             clienteNome: clienteNome,
@@ -49,13 +50,14 @@ clientesController.cadastrar = async (req, res) => {
 clientesController.deletar = async (req, res) => {
     const { id } = req.params;
 
-    if (!{clienteCPF, clienteID}) {
-        res.status(404).json({ 'erro': 'Cliente não encontrado!' });
-        return;
-    };
-
     try {
-        await Clientes.destroy({where: {clienteID: id}});
+        const cliente = await Clientes.findByPk(id);
+        if (!cliente) {
+            res.status(404).json({ 'erro': 'Cliente não encontrado!' });
+            return;
+        }
+        cliente.destroy();
+
         res.status(201).redirect('/clientes');
     } catch (err) {
         console.log(err);
@@ -78,23 +80,23 @@ clientesController.editar = async (req, res) => {
 };
 
 clientesController.atualizar = async (req, res) => {
-    const { clienteID, id } = req.params;
+    const { id } = req.params;
     const { clienteCPF, clienteNome, clienteEnde, clienteTel, clienteCidade, clienteDataNasc, clienteCNH, clienteCNHCat } = req.body;
 
-    if (!clienteID) {
-        res.status(404).json({ 'erro': 'Cliente não encontrado!' });
-    };
-    if(clienteCPF == clienteID.clienteCPF && clienteNome == clienteID.clienteNome && clienteEnde == clienteID.clienteEnde && clienteTel == clienteID.clienteTel && clienteCidade == clienteID.clienteCidade && clienteDataNasc == clienteID.clienteDataNasc && clienteCNH == clienteID.clienteCNH && clienteCNHCat == clienteID.clienteCNHCat){
-        res.status(400).json({message: 'Nenhum campo atualizado. Atualize ao menos um campo para salvar as alterações.' });
-        return;
-    };
-    if(clienteCPF != clienteID.clienteCPF && await Clientes.findAll({where : {clienteCPF: clienteCPF} })){
-        res.status(400).json({message: 'CPF inválido, tente novamente.' });  
-        return;
-    };
+    // if(clienteCPF != clienteID.clienteCPF && await Clientes.findAll({where : {clienteCPF: clienteCPF} })){
+    //     res.status(400).json({message: 'CPF inválido, tente novamente.' });  
+    //     return;
+    // };
 
     try {
-        var cliente = await Clientes.findOne({where: {clienteID}});
+        var cliente = await Clientes.findOne({where: {id}});
+        if (!cliente) {
+            res.status(404).json({ 'erro': 'Cliente não encontrado!' });
+        } else if(clienteCPF == cliente.clienteCPF && clienteNome == cliente.clienteNome && clienteEnde == cliente.clienteEnde && clienteTel == cliente.clienteTel && clienteCidade == cliente.clienteCidade && clienteDataNasc == cliente.clienteDataNasc && clienteCNH == cliente.clienteCNH && clienteCNHCat == cliente.clienteCNHCat){
+            res.status(400).json({message: 'Nenhum campo atualizado. Atualize ao menos um campo para salvar as alterações.' });
+            return;
+        };
+
         cliente.set({
             clienteCPF: clienteCPF || cliente.clienteCPF,
             clienteNome: clienteNome || cliente.clienteNome,

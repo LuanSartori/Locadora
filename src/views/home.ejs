@@ -1,5 +1,36 @@
-<%- include('paginas/_header'); -%>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-Aqui é a home
+    <link rel="stylesheet" href="/css/home.css">
 
-<%- include('paginas/_footer'); -%>
+    <!-- HEAD -->
+<%- include('components/_head'); -%>
+    <!-- !HEAD -->
+
+    <title>Locadora | Home</title>
+</head>
+<body>
+    <!-- HEADER -->
+<%- include('components/_header'); -%>
+    <!-- !HEADER -->
+
+    <section id="main-content">
+        
+        <div id="navegacao" class="row">
+            <a href="/usuarios">Usuários</a>
+            <a href="/funcionarios">Funcionários</a>
+            <a href="/clientes">Clientes</a>
+            <a href="/veiculos">Veículos</a>
+            <a href="/ordensdeservico">Ordens de Serviço</a>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+<%- include('components/_footer'); -%>
+    <!-- !FOOTER-->
+</body>
+</html>

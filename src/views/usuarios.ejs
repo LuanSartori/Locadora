@@ -10,7 +10,7 @@
 <%- include('components/_head'); -%>
     <!-- !HEAD -->
 
-    <title>Locadora | Funcionários</title>
+    <title>Locadora | Usuários</title>
 </head>
 <body>
     <!-- HEADER -->
@@ -25,18 +25,20 @@
                 <table id="tabela" class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Nome</th>
-                            <th>Departamento</th>
-                            <th>Data de Admissão</th>
+                            <th>Funcionário</th>
+                            <th>Login</th>
+                            <th>Setor</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <% if (funcionarios) { %> <% for (var i = 0; i < funcionarios.length; i++) { %>
+                    <% if (usuarios) { %> <% for (var i = 0; i < usuarios.length; i++) { %>
                         <tr>
-                            <td style="display: none;"><%= funcionarios[i].funcMatricula %></td>
-                            <td><%= funcionarios[i].funcNome %></td>
-                            <td><%= funcionarios[i].Departamento.deptoNome %></td>
-                            <td><%= funcionarios[i].funcAdmissao %></td>
+                            <td style="display: none;"><%= usuarios[i].usuarioID %></td>
+                            <td><%= usuarios[i].funcionario.funcNome %></td>
+                            <td><%= usuarios[i].usuarioLogin %></td>
+                            <td><%= usuarios[i].departamento.deptoNome %></td>
+                            <td><% if (usuarios[i].usuarioStatus) { %> Ativo <% } else { %> Desligado <% } %></td>
                         </tr>
                     <% } %> <% } %>
                     </tbody>
@@ -56,43 +58,32 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="titulo-modal">Cadastrar funcionário</h5>
+                        <h5 class="modal-title" id="titulo-modal">Cadastrar usuário</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="/funcionarios/add" method="post">
+                        <form action="/usuarios/add" method="post">
                             <div class="form-group">
-                                <input type="text" name="funcNome" placeholder="Nome" class="form-control" >
+                                <input type="text" name="usuarioLogin" placeholder="Login" class="form-control" >
                             </div>
                             <div class="form-group">
-                                <select class="form-control" name="funcDepto">
-                                    <option selected> Selecione o departamento</option>
-                                    <% for (var i = 0; i < departamentos.length; i++) { %>
-                                        <option value="<%= departamentos[i].deptoCodigo %>"><%= departamentos[i].deptoNome %></option>
+                                <input type="password" name="usuarioSenha" placeholder="Senha" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" name="usuarioFuncMat">
+                                    <% for (var i = 0; i < funcionarios.length; i++) { %>
+                                        <option value="<%= funcionarios[i].funcMatricula %>"><%= funcionarios[i].funcNome %></option>
                                     <% } %>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="number" min="0" step="0.01" name="funcSalario" placeholder="Salário" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <input type="date" name="funcAdmissao" placeholder="Data de Admissão" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <input type="number" min="0" max="10" name="funcFilho" placeholder="Filhos" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <select class="form-control" name="funcSexo" id="funcSexo">
-                                    <option selected>Sexo</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="F">Feminino</option>
-                                    <option value="O">Outro</option>
+                                <select class="form-control" name="usuarioSetor">
+                                    <% for (var i = 0; i < departamentos.length; i++) { %>
+                                        <option value="<%= departamentos[i].deptoCodigo %>"><%= departamentos[i].deptoNome %></option>
+                                    <% } %>
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="hidden" name="funcAtivo" value="1">
                             </div>
                             <button type="submit" class="btn btn-primary">
                                 Salvar
@@ -114,33 +105,30 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="form-editar" action="/funcionarios/update/" method="post">
+                        <form id="form-editar" action="/usuarios/add" method="post">
                             <div class="form-group">
-                                <input type="text" id="funcNome" name="funcNome" value="" class="form-control" >
+                                <input type="text" id="usuarioLogin" name="usuarioLogin" placeholder="Login" class="form-control" >
                             </div>
                             <div class="form-group">
-                                <select class="form-control" name="funcDepto" id="funcDepto">
+                                <input type="password" id="usuarioSenha" name="usuarioSenha" placeholder="Senha" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" id="usuarioSetor" name="usuarioSetor">
                                     <% for (var i = 0; i < departamentos.length; i++) { %>
                                         <option value="<%= departamentos[i].deptoCodigo %>"><%= departamentos[i].deptoNome %></option>
                                     <% } %>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="number" min="0" step="0.01" name="funcSalario" placeholder="Salário" value="" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <input type="number" id="funcFilho" min="0" max="10" name="funcFilho" placeholder="Filhos" value="" class="form-control" >
-                            </div>
-                            <div class="form-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" name="funcAtivo" type="checkbox" value="true" id="funcAtivo">
+                                    <input class="form-check-input" name="usuarioStatus" type="checkbox" value="true" id="usuarioStatus">
                                     <label class="form-check-label" for="flexCheckDefault">
-                                      Funcionário ativo:
+                                      Ativo:
                                     </label>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">
-                                Atualizar
+                                Salvar
                             </button>
                         </form>
                     </div>
@@ -152,7 +140,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js"></script>
     <script src="/js/tabela_dados.js"></script>
-    <script type="module" src="/js/funcionarios.js"></script>
+    <script type="module" src="/js/usuarios.js"></script>
     <!-- FOOTER -->
 <%- include('components/_footer'); -%>
     <!-- !FOOTER -->

@@ -16,7 +16,7 @@ Usuarios.init(
     usuarioSenha: { type: DataTypes.STRING, allowNull: false },
     usuarioFuncMat: { type: DataTypes.INTEGER(4), allowNull: false },
     usuarioSetor: { type: DataTypes.INTEGER(3), allowNull: false},
-    usuarioStatus: { type: DataTypes.BOOLEAN, allowNull: false }
+    usuarioStatus: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true}
   },
   {
     sequelize,
@@ -26,10 +26,10 @@ Usuarios.init(
 
 // Definição das chaves estrangeiras
 
-Usuarios.belongsTo(Funcionarios, { foreignKey: 'usuarioFuncMat' });
+Usuarios.belongsTo(Funcionarios, { foreignKey: 'usuarioFuncMat', as: 'funcionario' });
 Funcionarios.hasOne(Usuarios, { foreignKey: 'usuarioFuncMat' });
 
-Usuarios.belongsTo(Departamentos, { foreignKey: 'usuarioSetor' });
+Usuarios.belongsTo(Departamentos, { foreignKey: 'usuarioSetor', as: 'departamento' });
 Departamentos.hasMany(Usuarios, { foreignKey: 'usuarioSetor' });
 
 export default Usuarios;

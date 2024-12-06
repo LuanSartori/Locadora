@@ -10,7 +10,7 @@
 <%- include('components/_head'); -%>
     <!-- !HEAD -->
 
-    <title>Locadora | Funcionários</title>
+    <title>Locadora | Clientes</title>
 </head>
 <body>
     <!-- HEADER -->
@@ -26,17 +26,17 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Departamento</th>
-                            <th>Data de Admissão</th>
+                            <th>Endereço</th>
+                            <th>Telefone</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <% if (funcionarios) { %> <% for (var i = 0; i < funcionarios.length; i++) { %>
+                    <% if (clientes) { %> <% for (var i = 0; i < clientes.length; i++) { %>
                         <tr>
-                            <td style="display: none;"><%= funcionarios[i].funcMatricula %></td>
-                            <td><%= funcionarios[i].funcNome %></td>
-                            <td><%= funcionarios[i].Departamento.deptoNome %></td>
-                            <td><%= funcionarios[i].funcAdmissao %></td>
+                            <td style="display: none;"><%= (i + 1) %></td>
+                            <td><%= clientes[i].clienteNome %></td>
+                            <td><%= clientes[i].clienteEnde %></td>
+                            <td><%= clientes[i].clienteTel %></td>
                         </tr>
                     <% } %> <% } %>
                     </tbody>
@@ -56,43 +56,41 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="titulo-modal">Cadastrar funcionário</h5>
+                        <h5 class="modal-title" id="titulo-modal">Cadastrar cliente</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="/funcionarios/add" method="post">
+                        <form action="/clientes/add" method="post">
                             <div class="form-group">
-                                <input type="text" name="funcNome" placeholder="Nome" class="form-control" >
+                                <input type="text" name="clienteCPF" placeholder="CPF" class="form-control" >
                             </div>
                             <div class="form-group">
-                                <select class="form-control" name="funcDepto">
-                                    <option selected> Selecione o departamento</option>
-                                    <% for (var i = 0; i < departamentos.length; i++) { %>
-                                        <option value="<%= departamentos[i].deptoCodigo %>"><%= departamentos[i].deptoNome %></option>
+                                <input type="text" name="clienteNome" placeholder="Nome" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteEnde" placeholder="Endereco" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteTel" placeholder="Telefone" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteCidade" placeholder="Cidade" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="date" name="clienteDataNasc" placeholder="Data de Nascimento" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteCNH" placeholder="CNH" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <label for="CNHCat">Selecione o tipo da CNH:</label>
+                                <select class="form-control" name="clienteCNHCat" id="CNHCat">
+                                    <% for (var i = 0; i < categorias.length; i++) { %>
+                                        <option value="<%= categorias[i].catCod %>"><%= categorias[i].catNome %></option>
                                     <% } %>
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="number" min="0" step="0.01" name="funcSalario" placeholder="Salário" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <input type="date" name="funcAdmissao" placeholder="Data de Admissão" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <input type="number" min="0" max="10" name="funcFilho" placeholder="Filhos" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <select class="form-control" name="funcSexo" id="funcSexo">
-                                    <option selected>Sexo</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="F">Feminino</option>
-                                    <option value="O">Outro</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="hidden" name="funcAtivo" value="1">
                             </div>
                             <button type="submit" class="btn btn-primary">
                                 Salvar
@@ -108,36 +106,21 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="titulo-modal">Editar funcionário</h5>
+                        <h5 class="modal-title" id="titulo-modal">Editar cliente</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="form-editar" action="/funcionarios/update/" method="post">
+                        <form id="form-editar" action="/clientes/update/" method="post">
                             <div class="form-group">
-                                <input type="text" id="funcNome" name="funcNome" value="" class="form-control" >
+                                <input type="text" id="clienteNome" name="clienteNome" value="" class="form-control" >
                             </div>
                             <div class="form-group">
-                                <select class="form-control" name="funcDepto" id="funcDepto">
-                                    <% for (var i = 0; i < departamentos.length; i++) { %>
-                                        <option value="<%= departamentos[i].deptoCodigo %>"><%= departamentos[i].deptoNome %></option>
-                                    <% } %>
-                                </select>
+                                <input type="text" id="clienteEnde" name="clienteEnde" value="" class="form-control" >
                             </div>
                             <div class="form-group">
-                                <input type="number" min="0" step="0.01" name="funcSalario" placeholder="Salário" value="" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <input type="number" id="funcFilho" min="0" max="10" name="funcFilho" placeholder="Filhos" value="" class="form-control" >
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" name="funcAtivo" type="checkbox" value="true" id="funcAtivo">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                      Funcionário ativo:
-                                    </label>
-                                </div>
+                                <input type="text" id="clienteTel" name="clienteTel" value="" class="form-control" >
                             </div>
                             <button type="submit" class="btn btn-primary">
                                 Atualizar
@@ -150,9 +133,8 @@
 
     </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js"></script>
     <script src="/js/tabela_dados.js"></script>
-    <script type="module" src="/js/funcionarios.js"></script>
+    <script src="/js/clientes_lista.js"></script>
     <!-- FOOTER -->
 <%- include('components/_footer'); -%>
     <!-- !FOOTER -->

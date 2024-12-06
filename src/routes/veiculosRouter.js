@@ -4,6 +4,7 @@ const router = express.Router();
 
 
 router.get('/', controller.listar);
+router.get('/buscar_um', controller.buscarVeiculo);
 router.post('/add', controller.cadastrar);
 router.get('/delete/:placa', controller.deletar);
 router.get('/update/:placa', controller.editar);

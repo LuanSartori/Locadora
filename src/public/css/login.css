@@ -1,0 +1,18 @@
+/* bom diaa */
+
+#area-login {
+    width: 50%;
+    height: 70%;
+    padding: 20px 10%;
+    
+    align-self: center;
+    align-content: center;
+
+    background: linear-gradient(170deg, #C4C4C4 60%, #5E5E5E 100%);
+    border: 6px solid #A4BAD2;
+    border-radius: 40px;
+}
+
+#area-login button {
+    width: 35%;
+}
