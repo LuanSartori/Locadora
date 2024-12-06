@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/css/editor.css">
+    
+    <!-- HEAD -->
+<%- include('components/_head'); -%>
+    <!-- !HEAD -->
+
+    <title>Locadora | Clientes</title>
+</head>
+<body>
+    <!-- HEADER -->
+<%- include('components/_header'); -%>
+    <!-- !HEADER -->
+
+    <section id="main-content">
+        <div id="editor" class="container">
+
+            <div id="display" class="transparent-scroll">
+
+                <table id="tabela" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Endereço</th>
+                            <th>Telefone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% if (clientes) { %> <% for (var i = 0; i < clientes.length; i++) { %>
+                        <tr>
+                            <td style="display: none;"><%= (i + 1) %></td>
+                            <td><%= clientes[i].clienteNome %></td>
+                            <td><%= clientes[i].clienteEnde %></td>
+                            <td><%= clientes[i].clienteTel %></td>
+                        </tr>
+                    <% } %> <% } %>
+                    </tbody>
+                </table>
+            
+            </div>
+            <div id="controller">
+                <button id="adicionarBtn" class="btn btn-primary" data-toggle="modal" data-target="#cadastro-modal">Adicionar</button>
+                <button id="editarBtn" class="btn btn-primary" data-toggle="modal" data-target="#editar-modal">Editar</button>
+                <button id="deletarBtn" class="btn btn-primary">Deletar</button>
+            </div>
+
+        </div>
+
+        <!-- Modal, cadastrar -->
+        <div class="modal fade" id="cadastro-modal" tabindex="-1" role="dialog" aria-labelledby="titulo-modal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="titulo-modal">Cadastrar cliente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/clientes/add" method="post">
+                            <div class="form-group">
+                                <input type="text" name="clienteCPF" placeholder="CPF" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteNome" placeholder="Nome" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteEnde" placeholder="Endereco" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteTel" placeholder="Telefone" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteCidade" placeholder="Cidade" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="date" name="clienteDataNasc" placeholder="Data de Nascimento" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="clienteCNH" placeholder="CNH" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <label for="CNHCat">Selecione o tipo da CNH:</label>
+                                <select class="form-control" name="clienteCNHCat" id="CNHCat">
+                                    <% for (var i = 0; i < categorias.length; i++) { %>
+                                        <option value="<%= categorias[i].catCod %>"><%= categorias[i].catNome %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Salvar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal, editar -->
+        <div class="modal fade" id="editar-modal" tabindex="-1" role="dialog" aria-labelledby="titulo-modal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="titulo-modal">Editar cliente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-editar" action="/clientes/update/" method="post">
+                            <div class="form-group">
+                                <input type="text" id="clienteNome" name="clienteNome" value="" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="clienteEnde" name="clienteEnde" value="" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="clienteTel" name="clienteTel" value="" class="form-control" >
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Atualizar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <script src="/js/tabela_dados.js"></script>
+    <script src="/js/clientes_lista.js"></script>
+    <!-- FOOTER -->
+<%- include('components/_footer'); -%>
+    <!-- !FOOTER -->
+</body>
+</html>

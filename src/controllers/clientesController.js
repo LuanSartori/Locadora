@@ -7,7 +7,7 @@ clientesController.listar = async (req, res) => {
     try {
         const clientes = await Clientes.findAll();
         const categorias = await Categorias.findAll();
-        res.status(200).render('clientes', {
+        res.status(200).render('clientes_lista', {
             clientes: clientes,
             categorias: categorias
         })

@@ -31,12 +31,18 @@ loginController.logar = async (req, res) => {
             const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
             res.cookie("jwt_token", token, { maxAge: 60*60*1000, httpOnly: true }); // 1 hora
             res.status(200).redirect("/");
+            return;
         } else {
             res.status(401).redirect("/login?fail=true");
+            return;
         }
 
     } catch (err) {
         console.log(err);
+        console.log('BEEEE');
+
+        
+        
         res.status(500).json("Erro interno do sistema.");
     }
     

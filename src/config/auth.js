@@ -59,6 +59,7 @@ export function verificaLogin (req, res, next) {
             res.status(403).redirect('/');
             return;
         })
+    } else {
+        next();
     }
-    next();
 }

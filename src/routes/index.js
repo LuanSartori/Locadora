@@ -1,9 +1,9 @@
 import homeRouter from './homeRouter.js';
 import loginRouter from './loginRouter.js';
 import clientesRouter from './clientesRouter.js';
-import usuariosRouter from './usuariosRouter.js'
-import funcionariosRouter from './funcionariosRouter.js'
-import veiculosRouter from './veiculosRouter.js'
+import usuariosRouter from './usuariosRouter.js';
+import funcionariosRouter from './funcionariosRouter.js';
+import veiculosRouter from './veiculosRouter.js';
 
 import { requerLogin, verificaLogin } from '../config/auth.js';
 
