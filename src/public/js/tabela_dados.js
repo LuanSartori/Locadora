@@ -28,12 +28,10 @@ function capturarDados () {
 
         // acessa as colunas do linha selecionada
         linha = linha[0].getElementsByTagName("td")
-        var dados = {
-            id: linha[0].innerHTML,
-            nome: linha[1].innerHTML,
-            endereco: linha[2].innerHTML,
-            telefone: linha[3].innerHTML,
-        }
+        var dados = [];
+        Array.from(linha).forEach( (e) => {
+            dados.push(e.innerHTML)
+        })
         return dados;
     }
     return false;

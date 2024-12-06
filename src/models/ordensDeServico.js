@@ -20,7 +20,7 @@ OrdensDeServico.init(
     osDataDevolucao: { type: DataTypes.DATEONLY, allowNull: true },
     osKMRetirada: { type: DataTypes.DECIMAL(8, 2), allowNull: false },
     osKMDevolucao: { type: DataTypes.DECIMAL(8, 2), allowNull: true },
-    osStatus: { type: DataTypes.BOOLEAN, allowNull: false },
+    osStatus: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     osValorPgto: { type: DataTypes.DECIMAL(10, 2), allowNull: true }
   },
   {
@@ -31,13 +31,13 @@ OrdensDeServico.init(
 
 // Definição das chaves estrangeiras
 
-OrdensDeServico.belongsTo(Funcionarios, { foreignKey: 'osFuncMat', as: 'funcionarios' });
+OrdensDeServico.belongsTo(Funcionarios, { foreignKey: 'osFuncMat', as: 'funcionario' });
 Funcionarios.hasMany(OrdensDeServico, { foreignKey: 'osFuncMat', as: {singular: 'funcionario', plural: 'funcinarios'} });
 
-OrdensDeServico.belongsTo(Clientes, { foreignKey: 'osClienteID', as: 'clientes' });
+OrdensDeServico.belongsTo(Clientes, { foreignKey: 'osClienteID', as: 'cliente' });
 Clientes.hasMany(OrdensDeServico, { foreignKey: 'osClienteID', as: {singular:'cliente', plural: 'clientes'} });
 
-OrdensDeServico.belongsTo(Veiculos, { foreignKey: 'osVeicPlaca', as: 'veiculos' });
+OrdensDeServico.belongsTo(Veiculos, { foreignKey: 'osVeicPlaca', as: 'veiculo' });
 Veiculos.hasMany(OrdensDeServico, { foreignKey: 'osVeicPlaca', as: {singular: 'veiculo', plural: 'veiculos'} });
 
 // Definicação dos triggers

@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import Funcionarios from '../models/funcionarios.js';
 import Usuarios from '../models/usuarios.js';
 const loginController = {};
 
@@ -17,7 +16,7 @@ loginController.logar = async (req, res) => {
     const {usuarioLogin, usuarioSenha} = req.body;
 
     try {
-        const usuario = await Usuarios.findOne({where: {usuarioLogin: usuarioLogin}, include: Funcionarios});
+        const usuario = await Usuarios.findOne({where: {usuarioLogin: usuarioLogin}, include: 'funcionario'});
         if (!usuario) {
             res.status(401).redirect("/login?fail=true");
             return;
@@ -26,7 +25,7 @@ loginController.logar = async (req, res) => {
         if (usuarioSenha == usuario.usuarioSenha) {
             const payload = {
                 usuarioID: usuario.usuarioID,
-                usuarioNome: usuario.Funcionario.funcNome
+                usuarioNome: usuario.funcionario.funcNome
             };
             const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
             res.cookie("jwt_token", token, { maxAge: 60*60*1000, httpOnly: true }); // 1 hora
@@ -39,10 +38,6 @@ loginController.logar = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        console.log('BEEEE');
-
-        
-        
         res.status(500).json("Erro interno do sistema.");
     }
     

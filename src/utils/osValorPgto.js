@@ -1,13 +1,11 @@
-import OrdensDeServico from "../models/ordensDeServico";
-import Categorias from "../models/categorias";
-import Veiculos from "../models/veiculos";
+import Categorias from "../models/categorias.js";
+import Veiculos from "../models/veiculos.js";
 
-export function OsValorPgto(ordem) {
+export async function OsValorPgto(ordem) {
     
     try {
-        // var Os = OrdensDeServico.findByPk(osNum);
-        var veic = Veiculos.findOne({where: {veicPlaca: ordem.osVeicPlaca}});
-        var Cat = Categorias.findOne({where:{catCod: veic.veicCat}});
+        var veic = await Veiculos.findOne({where: {veicPlaca: ordem.osVeicPlaca}});
+        var Cat = await Categorias.findOne({where:{catCod: veic.veicCat}});
 
         const kmDev = ordem.osKMDevolucao;
         const kmRet = ordem.osDataRetirada;

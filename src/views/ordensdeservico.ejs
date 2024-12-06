@@ -1,5 +1,150 @@
-<%- include('paginas/_header'); -%>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-Aqui é a tela de ordens de serviço
+    <link rel="stylesheet" href="/css/editor.css">
+    
+    <!-- HEAD -->
+<%- include('components/_head'); -%>
+    <!-- !HEAD -->
 
-<%- include('paginas/_footer'); -%>
+    <title>Locadora | Ordens de Serviço</title>
+</head>
+<body>
+    <!-- HEADER -->
+<%- include('components/_header'); -%>
+    <!-- !HEADER -->
+
+    <section id="main-content">
+        <div id="editor" class="container">
+
+            <div id="display" class="transparent-scroll">
+
+                <table id="tabela" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Funcionário</th>
+                            <th>Cliente</th>
+                            <th>Carro</th>
+                            <th>Devolução</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% if (ordens) { %> <% for (var i = 0; i < ordens.length; i++) { %>
+                        <tr>
+                            <td style="display: none;"><%= ordens[i].osNum %></td>
+                            <td><%= ordens[i].funcionario.funcNome %></td>
+                            <td><%= ordens[i].cliente.clienteNome %></td>
+                            <td><%= ordens[i].veiculo.veicPlaca %></td>
+                            <td><% if (ordens[i].osDataDevolucao) { %> <%= ordens[i].osDataDevolucao %> <% } else { %> XXXX-XX-XX <% } %></td>
+                            <td><% if (ordens[i].osStatus) { %> Finalizado <% } else { %> Em progresso <% } %></td>
+                        </tr>
+                    <% } %> <% } %>
+                    </tbody>
+                </table>
+            
+            </div>
+            <div id="controller">
+                <button id="adicionarBtn" class="btn btn-primary" data-toggle="modal" data-target="#cadastro-modal">Adicionar</button>
+                <button id="editarBtn" class="btn btn-primary" data-toggle="modal" data-target="#editar-modal">Editar</button>
+                <button id="deletarBtn" class="btn btn-primary">Deletar</button>
+            </div>
+
+        </div>
+
+        <!-- Modal, cadastrar -->
+        <div class="modal fade" id="cadastro-modal" tabindex="-1" role="dialog" aria-labelledby="titulo-modal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="titulo-modal">Cadastrar ordem de serviço</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/ordensdeservico/add" method="post">
+                            <div class="form-group">
+                                <select class="form-control" id="osFuncMat" name="osFuncMat">
+                                    <% for (var i = 0; i < funcionarios.length; i++) { %>
+                                        <option value="<%= funcionarios[i].funcMatricula %>"><%= funcionarios[i].funcNome %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" id="osClienteID" name="osClienteID">
+                                    <% for (var i = 0; i < clientes.length; i++) { %>
+                                        <option value="<%= clientes[i].clienteID %>"><%= clientes[i].clienteNome %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" id="osVeicPlaca" name="osVeicPlaca">
+                                    <% for (var i = 0; i < veiculos.length; i++) { %>
+                                        <option value="<%= veiculos[i].veicPlaca %>"><%= veiculos[i].veicPlaca %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="date" name="osDataRetirada" placeholder="Data de Retirada" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="number" min="0" step="0.1" name="osKMRetirada" placeholder="KM de Retirada" class="form-control" >
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Salvar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal, editar -->
+        <div class="modal fade" id="editar-modal" tabindex="-1" role="dialog" aria-labelledby="titulo-modal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="titulo-modal">Editar Ordem de Serviço</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-editar" action="/ordensdeservico/update" method="post">
+                            <div class="form-group">
+                                <input type="date" id="osDataRetirada" name="osDataDevolucao" placeholder="Data de osDataDevolucao" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <input type="number" min="0" step="0.1" id="osKMDevolucao" name="osKMDevolucao" placeholder="KM de Retirada" class="form-control" >
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="osStatus" type="checkbox" value="true" id="osStatus">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Serviço concluído:
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Salvar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js"></script>
+    <script src="/js/tabela_dados.js"></script>
+    <script type="module" src="/js/ordens_de_servico.js"></script>
+    <!-- FOOTER -->
+<%- include('components/_footer'); -%>
+    <!-- !FOOTER -->
+</body>
+</html>

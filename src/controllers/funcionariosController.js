@@ -17,6 +17,22 @@ funcionariosController.listar = async (req, res) => {
     };
 };
 
+funcionariosController.buscarFuncionario = async (req, res) => {
+    const { funcMatricula } = req.query;
+
+    try {
+        const funcionario = await Funcionarios.findByPk(funcMatricula);
+        if (!funcionario) {
+            res.status(400).json({ erro: "Funcionário não encontrado. "});
+            return;
+        }
+        res.status(200).json(funcionario);
+    } catch (err) {
+        console.log(err);
+        res.status(500).redirect('/');
+    }
+};
+
 funcionariosController.cadastrar = async (req, res) => {
     const {funcMatricula, funcNome, funcDepto, funcSalario, funcAdmissao, funcFilho, funcSexo, funcAtivo} = req.body;
 
@@ -66,9 +82,9 @@ funcionariosController.editar = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const usuario = await Funcionarios.findOne({where: {funcMatricula: id}});
+        const funcionario = await Funcionarios.findOne({where: {funcMatricula: id}});
         res.status(200).render('funcionarios_edit', {
-            data: usuario
+            data: funcionario
         })
     } catch (err) {
         console.log(err);
@@ -97,7 +113,7 @@ funcionariosController.atualizar = async (req, res) => {
             funcAdmissao: funcAdmissao || func.funcAdmissao,
             funcFilho: funcFilho || func.funcFilho,
             funcSexo: funcSexo || func.funcSexo,
-            funcAtivo: funcAtivo || func.funcAtivo
+            funcAtivo: funcAtivo == undefined ? false : true
         });
         await func.save();
         res.status(201).redirect('/funcionarios');
